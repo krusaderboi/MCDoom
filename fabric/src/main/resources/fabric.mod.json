@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "id": "doom",
-  "version": "${mod_version}",
+  "version": "${version}",
   "name": "${mod_name}",
   "description": "${mod_description}",
   "authors": [
@@ -27,17 +27,17 @@
     ]
   },
   "mixins": [
-    "doom.mixins.json",
-    "doom.fabric.mixins.json"
+    "${mod_id}.mixins.json",
+    "${mod_id}.fabric.mixins.json"
   ],
-  "accessWidener": "doom.aw",
+  "accessWidener": "${mod_id}.accesswidener",
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
     "fabric-api": "*",
-    "java": ">=17",
+    "java": ">=21",
     "minecraft": "${minecraft_version}",
-    "azurelib": ">=2.0.16",
-    "smartbrainlib": ">=1.11",
-    "trinkets": ">=3.7.0"
+    "azurelib": "~${azurelib_version}",
+    "accessories": "~${accessories_version}",
+    "commonnetworking": "~1.0.10-1.21"
   }
 }

@@ -1,8 +1,8 @@
 package mod.azure.doom.mixins;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.api.client.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.doom.entities.projectiles.MeatHookEntity;
 import net.minecraft.world.entity.Entity;
 import org.spongepowered.asm.mixin.Mixin;

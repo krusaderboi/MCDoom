@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:chainsaw64"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:iron_ingot"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:redstone_torch"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "doom:gas_barrel"
+      },
+      "count": 1
+    }
+  ]
+}

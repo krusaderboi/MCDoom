@@ -1,7 +1,7 @@
 package mod.azure.doom.client.models.mobs.ambient;
 
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierambient.CueBallEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -30,7 +30,7 @@ public class CueballModel extends GeoModel<CueBallEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(CueBallEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "animations/" + (object.getVariant() == 3 ? "screecher" : "cueengineer") + ".animation.json");
     }
 

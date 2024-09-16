@@ -1,0 +1,20 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:darklord_chestplate"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:doom_chestplate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 15
+    }
+  ]
+}

@@ -1,6 +1,5 @@
 package mod.azure.doom.client.render.mobs.ambient;
 
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import mod.azure.doom.client.models.mobs.ambient.GoreNestModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierambient.GoreNestEntity;

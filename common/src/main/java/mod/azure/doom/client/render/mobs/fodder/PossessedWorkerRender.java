@@ -2,8 +2,8 @@ package mod.azure.doom.client.render.mobs.fodder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import mod.azure.azurelib.common.api.client.renderer.layer.BlockAndItemGeoLayer;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
 import mod.azure.doom.client.models.mobs.fodder.PossessedWorkerModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierfodder.PossessedScientistEntity;

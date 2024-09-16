@@ -1,7 +1,7 @@
 package mod.azure.doom.client.models.weapons;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.items.enums.GunTypeEnum;
 import net.minecraft.resources.ResourceLocation;

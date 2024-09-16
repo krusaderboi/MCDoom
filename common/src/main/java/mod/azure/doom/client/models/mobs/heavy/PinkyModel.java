@@ -1,7 +1,7 @@
 package mod.azure.doom.client.models.mobs.heavy;
 
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierheavy.PinkyEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -22,13 +22,8 @@ public class PinkyModel extends GeoModel<PinkyEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(PinkyEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "animations/" + (object.getVariant() == 3 ? "pinky2016." : "pinky_") + "animation.json");
-    }
-
-    @Override
-    public void setCustomAnimations(PinkyEntity animatable, long instanceId, AnimationState<PinkyEntity> animationState) {
-        super.setCustomAnimations(animatable, instanceId, animationState);
     }
 
     @Override

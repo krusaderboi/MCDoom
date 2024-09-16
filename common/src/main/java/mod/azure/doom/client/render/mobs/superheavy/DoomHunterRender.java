@@ -2,7 +2,7 @@ package mod.azure.doom.client.render.mobs.superheavy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.doom.client.models.mobs.superheavy.DoomHunterModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tiersuperheavy.DoomHunterEntity;
@@ -16,9 +16,9 @@ public class DoomHunterRender extends DoomMobRender<DoomHunterEntity> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, DoomHunterEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, DoomHunterEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
-                packedOverlay, red, green, blue, alpha);
+                packedOverlay, color);
         if (animatable.getEntityData().get(DoomHunterEntity.DEATH_STATE) == 0)
             model.getBone("sled").get().setHidden(false);
         if (animatable.getEntityData().get(DoomHunterEntity.DEATH_STATE) == 1)

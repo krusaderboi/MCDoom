@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.items;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.items.blockitems.DoomBlockItem;
 import net.minecraft.resources.ResourceLocation;

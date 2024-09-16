@@ -2,6 +2,7 @@ package mod.azure.doom.entities.task;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.sblforked.util.BrainUtils;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.tierambient.CueBallEntity;
 import mod.azure.doom.entities.tierboss.GladiatorEntity;
@@ -23,7 +24,6 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

@@ -1,13 +1,13 @@
 package mod.azure.doom.blocks.blockentities;
 
-import mod.azure.azurelib.animatable.GeoBlockEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoBlockEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.entities.DemonEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -25,7 +25,7 @@ public class TotemEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     public TotemEntity(BlockPos pos, BlockState state) {
-        super(Services.ENTITIES_HELPER.getTotemEntity(), pos, state);
+        super(DoomMobs.TOTEM_BLOCK.get(), pos, state);
     }
 
     public static void tick(Level world, BlockPos pos, BlockState state, TotemEntity blockEntity) {

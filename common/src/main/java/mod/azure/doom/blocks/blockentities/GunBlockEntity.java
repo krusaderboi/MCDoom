@@ -1,14 +1,16 @@
 package mod.azure.doom.blocks.blockentities;
 
-import mod.azure.azurelib.animatable.GeoBlockEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoBlockEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.doom.blocks.ImplementedInventory;
 import mod.azure.doom.client.gui.GunTableScreenHandler;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -29,7 +31,7 @@ public class GunBlockEntity extends BlockEntity implements ImplementedInventory,
     private final NonNullList<ItemStack> items = NonNullList.withSize(6, ItemStack.EMPTY);
 
     public GunBlockEntity(BlockPos pos, BlockState state) {
-        super(Services.ENTITIES_HELPER.getGunTableEntity(), pos, state);
+        super(DoomMobs.GUN_TABLE_ENTITY.get(), pos, state);
     }
 
     @Override
@@ -44,15 +46,15 @@ public class GunBlockEntity extends BlockEntity implements ImplementedInventory,
     }
 
     @Override
-    public void load(@NotNull CompoundTag nbt) {
-        super.load(nbt);
-        ContainerHelper.loadAllItems(nbt, items);
+    protected void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.loadAdditional(tag, registries);
+        ContainerHelper.loadAllItems(tag, items, registries);
     }
 
     @Override
-    public void saveAdditional(@NotNull CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        ContainerHelper.saveAllItems(nbt, items);
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+        super.saveAdditional(tag, registries);
+        ContainerHelper.saveAllItems(tag, items, registries);
     }
 
     @Override

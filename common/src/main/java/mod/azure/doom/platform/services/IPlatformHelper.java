@@ -42,8 +42,4 @@ public interface IPlatformHelper {
     Path getGameDir();
 
     boolean isServerEnvironment();
-
-    RecipeSerializer<?> getRecipeSeializer();
-
-    MenuType<?> getGunScreenHandler();
 }

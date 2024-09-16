@@ -1,11 +1,8 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.network.packet.EntityPacket;
 import mod.azure.doom.entities.DemonEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -34,11 +31,6 @@ public class ChaingunMobEntity extends AbstractHurtingProjectile {
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return !isInWater();
     }
@@ -53,12 +45,11 @@ public class ChaingunMobEntity extends AbstractHurtingProjectile {
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity), directHitDamage);
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }
-        this.playSound(Services.SOUNDS_HELPER.getCHAINGUN_SHOOT(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.CHAINGUN_SHOOT.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     @Override

@@ -54,8 +54,7 @@ public class E1M1TurnableHurtBlock extends Block {
 
     @Override
     public void stepOn(@NotNull Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, Entity entityIn) {
-        if (!entityIn.fireImmune() && entityIn instanceof LivingEntity livingEntity && !EnchantmentHelper.hasFrostWalker(
-                livingEntity))
+        if (!entityIn.fireImmune())
             entityIn.hurt(entityIn.damageSources().hotFloor(), 1.0F);
         super.stepOn(worldIn, pos, state, entityIn);
     }

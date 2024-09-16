@@ -1,18 +1,17 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.helper.CommonUtils;
 import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -33,8 +32,7 @@ public class RocketMobEntity extends AbstractHurtingProjectile implements GeoEnt
     }
 
     public RocketMobEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float directHitDamage) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getRocketMobEntity(), shooter, accelX, accelY, accelZ,
-                worldIn);
+        super(DoomMobs.ROCKETMOB.get(), accelX, accelY, accelZ, worldIn);
         this.shooter = shooter;
         this.directHitDamage = directHitDamage;
     }
@@ -60,11 +58,6 @@ public class RocketMobEntity extends AbstractHurtingProjectile implements GeoEnt
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return !isInWater();
     }
@@ -76,7 +69,7 @@ public class RocketMobEntity extends AbstractHurtingProjectile implements GeoEnt
             level().explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 3.0F, Level.ExplosionInteraction.NONE);
             remove(RemovalReason.DISCARDED);
         }
-        this.playSound(Services.SOUNDS_HELPER.getROCKET_HIT(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.ROCKET_HIT.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     @Override
@@ -85,17 +78,16 @@ public class RocketMobEntity extends AbstractHurtingProjectile implements GeoEnt
         if (!level().isClientSide()) {
             final var entity = entityHitResult.getEntity();
             final var entity2 = getOwner();
-            entity.setSecondsOnFire(5);
+            entity.setRemainingFireTicks(5);
             this.explode();
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity), directHitDamage);
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }
-        this.playSound(Services.SOUNDS_HELPER.getROCKET_HIT(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.ROCKET_HIT.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     protected void explode() {

@@ -1,13 +1,14 @@
 package mod.azure.doom.client.render.mobs;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.model.GeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.api.client.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.projectiles.MeatHookEntity;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.core.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 public class DoomMobRender<T extends DemonEntity & GeoEntity> extends GeoEntityRenderer<T> {
     public DoomMobRender(EntityRendererProvider.Context renderManager, GeoModel<T> model) {
@@ -27,7 +28,7 @@ public class DoomMobRender<T extends DemonEntity & GeoEntity> extends GeoEntityR
     }
 
     @Override
-    protected int getBlockLightLevel(T entityIn, BlockPos partialTicks) {
+    protected int getBlockLightLevel(@NotNull T entityIn, @NotNull BlockPos partialTicks) {
         return 15;
     }
 

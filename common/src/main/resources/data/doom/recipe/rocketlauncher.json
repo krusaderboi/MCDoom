@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:rocketlauncher"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 15
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 6
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:tnt"
+      },
+      "count": 2
+    }
+  ]
+}

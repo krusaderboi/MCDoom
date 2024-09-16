@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.mobs.boss;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierboss.MotherDemonEntity;
 import net.minecraft.client.renderer.RenderType;

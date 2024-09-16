@@ -1,0 +1,18 @@
+{
+  "result": {
+    "id": "doom:demonic_doom_leggings"
+  },
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "@",
+    "#"
+  ],
+  "key": {
+    "#": {
+      "item": "minecraft:nether_wart"
+    },
+    "@": {
+      "item": "doom:doom_leggings"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:bfg_eternal"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 50
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 15
+    }
+  ]
+}

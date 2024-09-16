@@ -1,9 +1,9 @@
 package mod.azure.doom.client.models.mobs.superheavy;
 
-import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animatable.model.CoreGeoBone;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tiersuperheavy.ArchvileEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -23,7 +23,7 @@ public class ArchvileModel extends GeoModel<ArchvileEntity> {
 
     @Override
     public ResourceLocation getModelResource(ArchvileEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "geo/" + (object.getVariant() == 1 ? "archvile" : "archvileeternal") + ".geo.json");
     }
 
@@ -35,7 +35,7 @@ public class ArchvileModel extends GeoModel<ArchvileEntity> {
 
     @Override
     public ResourceLocation getAnimationResource(ArchvileEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "animations/" + (object.getVariant() == 1 ? "archvile_" : "archvileeternal.") + "animation.json");
     }
 

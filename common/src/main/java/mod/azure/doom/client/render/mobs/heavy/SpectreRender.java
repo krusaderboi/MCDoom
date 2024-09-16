@@ -2,7 +2,7 @@ package mod.azure.doom.client.render.mobs.heavy;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.doom.client.models.mobs.heavy.SpectreModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierheavy.SpectreEntity;
@@ -17,8 +17,8 @@ public class SpectreRender extends DoomMobRender<SpectreEntity> {
     }
 
     @Override
-    public void actuallyRender(PoseStack poseStack, SpectreEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void actuallyRender(PoseStack poseStack, SpectreEntity animatable, BakedGeoModel model, RenderType renderType, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         super.actuallyRender(poseStack, animatable, model, renderType, bufferSource, buffer, isReRender, partialTick,
-                packedLight, packedOverlay, red, green, blue, 0.1F);
+                packedLight, packedOverlay, color);
     }
 }

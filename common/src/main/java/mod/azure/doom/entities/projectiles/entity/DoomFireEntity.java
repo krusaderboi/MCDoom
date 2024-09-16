@@ -1,16 +1,15 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.entities.DemonEntity;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -38,7 +37,7 @@ public class DoomFireEntity extends Entity implements GeoEntity {
     }
 
     public DoomFireEntity(Level worldIn, double x, double y, double z, int warmup, LivingEntity casterIn, float damage) {
-        this(mod.azure.doom.platform.Services.ENTITIES_HELPER.getDoomFireEntity(), worldIn);
+        this(DoomMobs.DOOMFIRE.get(), worldIn);
         warmupDelayTicks = warmup;
         setCaster(casterIn);
         this.absMoveTo(x, y, z);
@@ -53,10 +52,6 @@ public class DoomFireEntity extends Entity implements GeoEntity {
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return cache;
-    }
-
-    @Override
-    protected void defineSynchedData() {
     }
 
     public void setCaster(@Nullable LivingEntity owner) {
@@ -75,6 +70,11 @@ public class DoomFireEntity extends Entity implements GeoEntity {
         compound.putInt("Warmup", warmupDelayTicks);
         if (casterUuid != null)
             compound.putUUID("Owner", casterUuid);
+    }
+
+    @Override
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+
     }
 
     @Override
@@ -117,11 +117,6 @@ public class DoomFireEntity extends Entity implements GeoEntity {
                 e.setRemainingFireTicks(60);
             }
         });
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override

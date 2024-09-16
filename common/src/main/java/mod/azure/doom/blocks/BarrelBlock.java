@@ -4,15 +4,17 @@ import mod.azure.doom.blocks.blockentities.BarrelEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -22,6 +24,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class BarrelBlock extends Block {
     public static final DirectionProperty direction = HorizontalDirectionalBlock.FACING;
@@ -59,25 +62,24 @@ public class BarrelBlock extends Block {
     }
 
     @Override
-    public void playerWillDestroy(Level worldIn, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
-        if (!worldIn.isClientSide() && !player.isCreative()) explode(worldIn, pos);
-
-        super.playerWillDestroy(worldIn, pos, state, player);
+    public void playerDestroy(Level level, @NotNull Player player, @NotNull BlockPos pos, @NotNull BlockState state, @Nullable BlockEntity blockEntity, @NotNull ItemStack tool) {
+        if (!level.isClientSide() && !player.isCreative()) explode(level, pos);
+        super.playerDestroy(level, player, pos, state, blockEntity, tool);
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, @NotNull Level worldIn, @NotNull BlockPos pos, Player player, @NotNull InteractionHand handIn, @NotNull BlockHitResult hit) {
-        var itemstack = player.getItemInHand(handIn);
+    protected @NotNull ItemInteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
+        var itemstack = player.getItemInHand(hand);
         if (!itemstack.is(Items.FLINT_AND_STEEL) && !itemstack.is(Items.FIRE_CHARGE))
-            return super.use(state, worldIn, pos, player, handIn, hit);
+            return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
         else {
-            explode(worldIn, pos);
-            worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
+            explode(level, pos);
+            level.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);
             if (!player.isCreative() && !itemstack.is(Items.FLINT_AND_STEEL))
-                itemstack.hurtAndBreak(1, player, player1 -> player1.broadcastBreakEvent(handIn));
+                itemstack.hurtAndBreak(1, player, player.getEquipmentSlotForItem(itemstack));
             else itemstack.shrink(1);
 
-            return InteractionResult.sidedSuccess(worldIn.isClientSide);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         }
     }
 

@@ -1,18 +1,17 @@
 package mod.azure.doom.entities.projectiles;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.entities.tierboss.IconofsinEntity;
 import mod.azure.doom.helper.CommonUtils;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -37,11 +36,11 @@ public class RocketEntity extends AbstractArrow implements GeoEntity {
 
     public RocketEntity(EntityType<? extends RocketEntity> entityType, Level world) {
         super(entityType, world);
-        pickup = Pickup.DISALLOWED;
+        this.pickup = Pickup.DISALLOWED;
     }
 
     public RocketEntity(Level world, LivingEntity owner, float damage) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getRocketEntity(), owner, world);
+        super(DoomMobs.ROCKET.get(), world);
         shooter = owner;
         projectiledamage = damage;
     }
@@ -57,17 +56,22 @@ public class RocketEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        compound.putShort("life", (short)this.tickCount);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        this.tickCount = compound.getShort("life");
+    }
+
+    @Override
     protected void doPostHurtEffects(@NotNull LivingEntity living) {
         super.doPostHurtEffects(living);
         if (!(living instanceof Player) && !(living instanceof IconofsinEntity)) {
             living.setDeltaMovement(0, 0, 0);
             living.invulnerableTime = 0;
         }
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override
@@ -106,7 +110,7 @@ public class RocketEntity extends AbstractArrow implements GeoEntity {
 
     @Override
     protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
-        return Services.SOUNDS_HELPER.getROCKET_HIT();
+        return DoomSounds.ROCKET_HIT.get();
     }
 
     @Override
@@ -144,12 +148,17 @@ public class RocketEntity extends AbstractArrow implements GeoEntity {
         return Items.AIR.getDefaultInstance();
     }
 
+    @Override
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        return Items.AIR.getDefaultInstance();
+    }
+
     public void doDamage() {
         level().getEntities(this, new AABB(blockPosition().above()).inflate(4)).forEach(e -> {
             if (e instanceof LivingEntity) {
                 e.hurt(damageSources().playerAttack((Player) shooter), projectiledamage);
                 if (this.isOnFire())
-                    e.setSecondsOnFire(50);
+                    e.setRemainingFireTicks(50);
             }
             level().explode(this, this.getX(), this.getY(0.0625D), this.getZ(), 0.0F, Level.ExplosionInteraction.NONE);
         });

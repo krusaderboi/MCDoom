@@ -1,20 +1,18 @@
 package mod.azure.doom.entities.projectiles;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierheavy.CacodemonEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -49,7 +47,7 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
     }
 
     public GrenadeEntity(Level world, LivingEntity owner) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getGranadeEntity(), owner, world);
+        super(DoomMobs.GRENADE.get(), world);
         shooter = owner;
     }
 
@@ -67,9 +65,9 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(SPINNING, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(SPINNING, false);
     }
 
     public boolean isSpinning() {
@@ -78,11 +76,6 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
 
     public void setSpinning(boolean spin) {
         entityData.set(SPINNING, spin);
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override
@@ -105,14 +98,14 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public void addAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.addAdditionalSaveData(compound);
+    public void addAdditionalSaveData(CompoundTag compound) {
+        compound.putShort("life", (short)this.tickCount);
         compound.putBoolean("State", isSpinning());
     }
 
     @Override
-    public void readAdditionalSaveData(@NotNull CompoundTag compound) {
-        super.readAdditionalSaveData(compound);
+    public void readAdditionalSaveData(CompoundTag compound) {
+        this.tickCount = compound.getShort("life");
         setSpinning(compound.getBoolean("State"));
     }
 
@@ -131,7 +124,7 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
 
     @Override
     protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
-        return Services.SOUNDS_HELPER.getBEEP();
+        return DoomSounds.BEEP.get();
     }
 
     @Override
@@ -163,7 +156,7 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
         if (target instanceof LivingEntity) {
             target.invulnerableTime = 0;
             if (this.isOnFire())
-                target.setSecondsOnFire(50);
+                target.setRemainingFireTicks(50);
             target.hurt(damageSources().indirectMagic(this, target), MCDoom.config.grenade_damage);
             target.setDeltaMovement(target.getDeltaMovement().add(1.0, 0.6, 1.0));
         }
@@ -177,6 +170,11 @@ public class GrenadeEntity extends AbstractArrow implements GeoEntity {
     @Override
     public boolean displayFireAnimation() {
         return false;
+    }
+
+    @Override
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        return Items.AIR.getDefaultInstance();
     }
 
 }

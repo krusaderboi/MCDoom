@@ -3,18 +3,16 @@ package mod.azure.doom.entities.tierboss;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
+import mod.azure.azurelib.sblforked.api.core.BrainActivityGroup;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.target.InvalidateAttackTarget;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.DoomAnimationsDefault;
 import mod.azure.doom.entities.task.DemonProjectileAttack;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.Level;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import org.jetbrains.annotations.NotNull;
 
 public class SpiderMastermind2016Entity extends SpiderMastermindEntity {
 
@@ -32,13 +30,13 @@ public class SpiderMastermind2016Entity extends SpiderMastermindEntity {
         }).triggerableAnim("death", DoomAnimationsDefault.DEATH).setSoundKeyframeHandler(event -> {
             if (event.getKeyframeData().getSound().matches("walk") && (level().isClientSide()))
                 level().playLocalSound(this.getX(), this.getY(), this.getZ(),
-                        mod.azure.doom.platform.Services.SOUNDS_HELPER.getSPIDERDEMON_AMBIENT(), SoundSource.HOSTILE,
+                        DoomSounds.SPIDERDEMON_AMBIENT.get(), SoundSource.HOSTILE,
                         0.25F, 1.0F, false);
         })).add(new AnimationController<>(this, "attackController", 0, event -> PlayState.STOP).setSoundKeyframeHandler(
                 event -> {
                     if (event.getKeyframeData().getSound().matches("attack") && (level().isClientSide()))
                         level().playLocalSound(this.getX(), this.getY(), this.getZ(),
-                                mod.azure.doom.platform.Services.SOUNDS_HELPER.getPLASMA_FIRING(), SoundSource.HOSTILE,
+                                DoomSounds.PLASMA_FIRING.get(), SoundSource.HOSTILE,
                                 0.25F, 1.0F, false);
                 }).triggerableAnim("ranged", DoomAnimationsDefault.ATTACKING));
     }
@@ -58,7 +56,7 @@ public class SpiderMastermind2016Entity extends SpiderMastermindEntity {
     }
 
     @Override
-    protected float getStandingEyeHeight(@NotNull Pose pose, @NotNull EntityDimensions dimensions) {
-        return 2.5F;
+    public double getEyeY() {
+        return 2.5;
     }
 }

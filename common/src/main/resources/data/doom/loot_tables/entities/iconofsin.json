@@ -6,10 +6,6 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "doom:bfg_eternal"
-        },
-        {
-          "type": "minecraft:item",
           "name": "minecraft:netherite_scrap",
           "functions": [
             {

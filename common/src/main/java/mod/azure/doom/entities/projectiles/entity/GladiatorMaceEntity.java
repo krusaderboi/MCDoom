@@ -1,17 +1,15 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.tierboss.GladiatorEntity;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,8 +28,7 @@ public class GladiatorMaceEntity extends AbstractHurtingProjectile implements Ge
     }
 
     public GladiatorMaceEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getGlaiatorMaceEntity(), shooter, accelX, accelY, accelZ,
-                worldIn);
+        super(DoomMobs.GLADIATORMACE.get(), accelX, accelY, accelZ, worldIn);
         this.shooter = shooter;
     }
 
@@ -56,11 +53,6 @@ public class GladiatorMaceEntity extends AbstractHurtingProjectile implements Ge
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return !isInWater();
     }
@@ -78,14 +70,13 @@ public class GladiatorMaceEntity extends AbstractHurtingProjectile implements Ge
         if (!level().isClientSide()) {
             final var entity = entityHitResult.getEntity();
             final var entity2 = getOwner();
-            entity.setSecondsOnFire(5);
+            entity.setRemainingFireTicks(5);
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity),
                         MCDoom.config.gladiator_ranged_damage + (shooter.getEntityData().get(
                                 GladiatorEntity.DEATH_STATE) == 1 ? MCDoom.config.gladiator_phaseone_damage_boost : 0));
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }

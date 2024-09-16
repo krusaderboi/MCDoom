@@ -1,11 +1,11 @@
 package mod.azure.doom.entities.tierambient;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.DoomAnimationsDefault;
@@ -103,7 +103,7 @@ public class GoreNestEntity extends DemonEntity implements GeoEntity {
 
         for (var k = 1; k < 5; ++k) {
             final var waveentity = BuiltInRegistries.ENTITY_TYPE.get(
-                    new ResourceLocation(waveEntries.get(getRandom().nextInt(waveEntries.size())))).create(level());
+                    ResourceLocation.parse(waveEntries.get(getRandom().nextInt(waveEntries.size())))).create(level());
             Objects.requireNonNull(waveentity).setPos(this.getX() + random, this.getY() + 0.5D, this.getZ() + random);
             level().addFreshEntity(waveentity);
         }

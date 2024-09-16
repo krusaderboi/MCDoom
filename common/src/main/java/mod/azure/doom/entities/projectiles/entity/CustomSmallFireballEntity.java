@@ -5,14 +5,15 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.SmallFireball;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class CustomSmallFireballEntity extends SmallFireball {
 
     private final float directHitDamage;
 
-    public CustomSmallFireballEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float directHitDamage) {
-        super(worldIn, shooter, accelX, accelY, accelZ);
+    public CustomSmallFireballEntity(Level worldIn, LivingEntity shooter, Vec3 movement, float directHitDamage) {
+        super(worldIn, shooter, movement);
         this.directHitDamage = directHitDamage;
     }
 
@@ -24,8 +25,7 @@ public class CustomSmallFireballEntity extends SmallFireball {
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity), directHitDamage);
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }

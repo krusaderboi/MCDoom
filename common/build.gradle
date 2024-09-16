@@ -1,43 +1,47 @@
 plugins {
-    id 'idea'
-    id 'java'
-    id 'maven-publish'
-    id 'org.spongepowered.gradle.vanilla'
-}
-base {
-    archivesName = "${mod_name}-common-${minecraft_version}"
-}
-minecraft {
-    version(minecraft_version)
-    if (file("src/main/resources/doom.aw").exists()) {
-        accessWideners(file("src/main/resources/doom.aw"))
-    }
+    id 'multiloader-common'
+    id 'net.neoforged.moddev' version "${neo_moddev}"
 }
 
-repositories {
-    mavenCentral()
-    maven { url 'https://libs.azuredoom.com:4443/mods' }
-    maven { url 'https://dl.cloudsmith.io/public/tslat/sbl/maven/' }
+neoForge {
+    neoFormVersion = "1.21-20240613.152323"
+
+    accessTransformers = ["../neoforge/src/main/resources/META-INF/accesstransformer.cfg"]
+
+    parchment {
+        minecraftVersion = "${parchment_minecraft}"
+        mappingsVersion = "${parchment_version}"
+    }
+
+    runs {
+        client {
+            client()
+        }
+        server {
+            server()
+        }
+    }
 }
 
 dependencies {
     compileOnly group: 'org.spongepowered', name: 'mixin', version: '0.8.5'
-    implementation group: 'com.google.code.findbugs', name: 'jsr305', version: '3.0.1'
-    implementation group: 'org.ow2.asm', name: 'asm-tree', version: '9.5'
-    compileOnly "net.tslat.smartbrainlib:SmartBrainLib-neoforge-1.20.1:${project.sbl_version}"
-    compileOnly "mod.azure.azurelib:azurelib-neo-1.20.1:${azurelib_version}"
+    compileOnly "mod.azure.azurelib:azurelib-common-${minecraft_version}:${azurelib_version}"
+    implementation "mysticdrew:common-networking-common:${commonnetworking_version}"
+    compileOnly("io.wispforest:accessories-common:${accessories_version}-mojmap")
 }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId base.archivesName.get()
-            from components.java
-        }
+configurations {
+    commonJava {
+        canBeResolved = false
+        canBeConsumed = true
     }
-    repositories {
-        maven {
-            url "file://" + System.getenv("local_maven")
-        }
+    commonResources {
+        canBeResolved = false
+        canBeConsumed = true
     }
+}
+
+artifacts {
+    commonJava sourceSets.main.java.sourceDirectories.singleFile
+    commonResources sourceSets.main.resources.sourceDirectories.singleFile
 }

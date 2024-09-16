@@ -1,8 +1,8 @@
 package mod.azure.doom.client.models.mobs.fodder;
 
-import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierfodder.MechaZombieEntity;
 import net.minecraft.client.renderer.RenderType;

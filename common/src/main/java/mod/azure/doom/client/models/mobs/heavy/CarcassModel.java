@@ -1,8 +1,8 @@
 package mod.azure.doom.client.models.mobs.heavy;
 
-import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierheavy.CarcassEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -13,12 +13,12 @@ public class CarcassModel extends GeoModel<CarcassEntity> {
 
     @Override
     public ResourceLocation getModelResource(CarcassEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID, "geo/carcass.geo.json");
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID, "geo/carcass.geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(CarcassEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID, "textures/entity/carcass.png");
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID, "textures/entity/carcass.png");
     }
 
     @Override

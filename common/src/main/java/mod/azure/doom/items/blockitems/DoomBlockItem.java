@@ -1,13 +1,13 @@
 package mod.azure.doom.items.blockitems;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.common.api.client.renderer.GeoItemRenderer;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.renderer.GeoItemRenderer;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.client.render.item.GunCraftingItemRender;
 import mod.azure.doom.client.render.item.TotemItemRender;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
@@ -15,10 +15,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.Block;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class DoomBlockItem extends BlockItem implements GeoItem {
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
     private String id;
 
@@ -42,12 +40,7 @@ public abstract class DoomBlockItem extends BlockItem implements GeoItem {
     }
 
     @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
-    }
-
-    @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createRenderer(Consumer<RenderProvider> consumer) {
         consumer.accept(new RenderProvider() {
             private GeoItemRenderer<?> renderer;
 

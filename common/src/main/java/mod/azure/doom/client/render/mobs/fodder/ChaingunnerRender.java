@@ -2,12 +2,12 @@ package mod.azure.doom.client.render.mobs.fodder;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.GeoBone;
-import mod.azure.azurelib.renderer.layer.BlockAndItemGeoLayer;
+import mod.azure.azurelib.common.api.client.renderer.layer.BlockAndItemGeoLayer;
+import mod.azure.azurelib.common.internal.common.cache.object.GeoBone;
 import mod.azure.doom.client.models.mobs.fodder.ChaingunnerModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierfodder.ChaingunnerEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomItems;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -23,7 +23,7 @@ public class ChaingunnerRender extends DoomMobRender<ChaingunnerEntity> {
             @Override
             protected ItemStack getStackForBone(GeoBone bone, ChaingunnerEntity animatable) {
                 return switch (bone.getName()) {
-                    case "bipedLeftArm_1" -> new ItemStack(Services.ITEMS_HELPER.getChainGun());
+                    case "bipedLeftArm_1" -> new ItemStack(DoomItems.CHAINGUN.get());
                     default -> null;
                 };
             }

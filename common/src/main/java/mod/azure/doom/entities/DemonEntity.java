@@ -1,13 +1,10 @@
 package mod.azure.doom.entities;
 
-import mod.azure.azurelib.ai.pathing.AzureNavigation;
-import mod.azure.azurelib.animatable.GeoEntity;
-import mod.azure.azurelib.network.packet.EntityPacket;
+import mod.azure.azurelib.common.api.common.ai.pathing.AzureNavigation;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
 import mod.azure.doom.entities.projectiles.entity.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -25,14 +22,14 @@ import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.projectile.ThrownPotion;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.alchemy.PotionUtils;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,17 +50,16 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
     protected DemonEntity(EntityType<? extends Monster> type, Level worldIn) {
         super(type, worldIn);
         xpReward = (int) getMaxHealth();
-        setMaxUpStep(1.5f);
+    }
+
+    @Override
+    public float maxUpStep() {
+        return 1.5f;
     }
 
     public static boolean canSpawnInDark(EntityType<? extends DemonEntity> ignoredType, LevelAccessor serverWorldAccess, MobSpawnType ignoredSpawnReason, BlockPos pos, RandomSource ignoredRandom) {
         if (serverWorldAccess.getDifficulty() == Difficulty.PEACEFUL) return false;
         return !serverWorldAccess.getBlockState(pos.below()).is(Blocks.NETHER_WART_BLOCK);
-    }
-
-    @Override
-    public @NotNull MobType getMobType() {
-        return MobType.UNDEAD;
     }
 
     @Override
@@ -80,11 +76,11 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(ANGER_TIME, 0);
-        entityData.define(STATE, 0);
-        entityData.define(SCREAM, false);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(ANGER_TIME, 0);
+        builder.define(STATE, 0);
+        builder.define(SCREAM, false);
     }
 
     @Override
@@ -161,11 +157,6 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
         return super.hurt(source, amount);
     }
 
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
-    }
-
     public void shootBloodBolt(float damage) {
         if (!this.level().isClientSide && this.getTarget() != null) {
             var projectile = new BloodBoltEntity(level(), this,
@@ -229,9 +220,9 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
     public void shootFireball(float damage, int offset) {
         if (!this.level().isClientSide && this.getTarget() != null) {
             var projectile = new CustomFireballEntity(level(), this,
-                    this.getTarget().getX() - (this.getX() + this.getViewVector(1.0F).x * 2),
+                    new Vec3(this.getTarget().getX() - (this.getX() + this.getViewVector(1.0F).x * 2),
                     this.getTarget().getY(0.5) - (this.getY(0.5)),
-                    this.getTarget().getZ() - (this.getZ() + this.getViewVector(1.0F).z * 2), damage);
+                    this.getTarget().getZ() - (this.getZ() + this.getViewVector(1.0F).z * 2)), damage);
             projectile.setPos((this.getX() + this.getViewVector(1.0F).x) + offset, this.getY(0.5),
                     this.getZ() + this.getViewVector(1.0F).z);
             this.level().addFreshEntity(projectile);
@@ -253,9 +244,9 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
     public void shootSmallFireball(float damage) {
         if (!this.level().isClientSide && this.getTarget() != null) {
             var projectile = new CustomSmallFireballEntity(level(), this,
-                    this.getTarget().getX() - (this.getX() + this.getViewVector(1.0F).x * 2),
+                    new Vec3(this.getTarget().getX() - (this.getX() + this.getViewVector(1.0F).x * 2),
                     this.getTarget().getY(0.5) - (this.getY(0.5)),
-                    this.getTarget().getZ() - (this.getZ() + this.getViewVector(1.0F).z * 2), damage);
+                    this.getTarget().getZ() - (this.getZ() + this.getViewVector(1.0F).z * 2)), damage);
             projectile.setPos(this.getX() + this.getViewVector(1.0F).x, this.getY(0.5),
                     this.getZ() + this.getViewVector(1.0F).z);
             this.level().addFreshEntity(projectile);
@@ -280,7 +271,7 @@ public abstract class DemonEntity extends Monster implements NeutralMob, Enemy, 
             final var d1 = target.getEyeY() - 1.1F - this.getY();
             final var d2 = target.getZ() + target.getDeltaMovement().z - this.getZ();
             final var thrownpotion = new ThrownPotion(level(), this);
-            thrownpotion.setItem(PotionUtils.setPotion(new ItemStack(Items.SPLASH_POTION), Potions.POISON));
+            thrownpotion.setItem(PotionContents.createItemStack(Items.SPLASH_POTION, Potions.POISON));
             thrownpotion.setXRot(thrownpotion.getXRot() + 20.0F);
             thrownpotion.shoot(d0, d1 + Math.sqrt(d0 * d0 + d2 * d2) * 0.2D, d2, 0.75F, 8.0F);
             thrownpotion.setPos(this.getX() + this.getViewVector(1.0F).x * 2, this.getY(0.5),

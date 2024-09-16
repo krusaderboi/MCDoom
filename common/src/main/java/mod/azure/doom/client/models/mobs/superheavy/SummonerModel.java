@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.mobs.superheavy;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tiersuperheavy.SummonerEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -15,7 +15,7 @@ public class SummonerModel extends GeoModel<SummonerEntity> {
 
     @Override
     public ResourceLocation getTextureResource(SummonerEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "textures/entity/" + (object.getVariant() == 2 ? "summoner_red" : "summoner") + ".png");
     }
 

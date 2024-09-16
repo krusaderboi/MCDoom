@@ -9,7 +9,7 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomBlocks;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DoomCategory implements DisplayCategory<DoomDisplay> {
-    public static final EntryStack<ItemStack> ICON = EntryStacks.of(Services.BLOCKS_HELPER.getGunTable());
+    public static final EntryStack<ItemStack> ICON = EntryStacks.of(DoomBlocks.GUN_TABLE.get());
 
     @Override
     public Renderer getIcon() {

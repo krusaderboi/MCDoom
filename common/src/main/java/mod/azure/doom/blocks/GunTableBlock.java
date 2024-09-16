@@ -1,11 +1,10 @@
 package mod.azure.doom.blocks;
 
 import mod.azure.doom.blocks.blockentities.GunBlockEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -51,7 +50,7 @@ public class GunTableBlock extends Block implements EntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return Services.ENTITIES_HELPER.getGunTableEntity().create(pos, state);
+        return DoomMobs.GUN_TABLE_ENTITY.get().create(pos, state);
     }
 
     @Override
@@ -60,10 +59,11 @@ public class GunTableBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(@NotNull BlockState state, Level world, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hit) {
-        if (!world.isClientSide) {
-            var screenHandlerFactory = state.getMenuProvider(world, pos);
-            if (screenHandlerFactory != null) player.openMenu(screenHandlerFactory);
+    protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull BlockHitResult hitResult) {
+        if (!level.isClientSide) {
+            var screenHandlerFactory = state.getMenuProvider(level, pos);
+            if (screenHandlerFactory != null)
+                player.openMenu(screenHandlerFactory);
         }
         return InteractionResult.SUCCESS;
     }

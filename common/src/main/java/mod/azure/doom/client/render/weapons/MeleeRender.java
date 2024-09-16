@@ -1,8 +1,8 @@
 package mod.azure.doom.client.render.weapons;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.renderer.GeoItemRenderer;
-import mod.azure.azurelib.renderer.layer.AutoGlowingGeoLayer;
+import mod.azure.azurelib.common.api.client.renderer.GeoItemRenderer;
+import mod.azure.azurelib.common.api.client.renderer.layer.AutoGlowingGeoLayer;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
 import mod.azure.doom.client.models.weapons.MeleeWeaponModel;
 import mod.azure.doom.items.enums.MeleeWeaponEnum;
 import net.minecraft.world.item.Item;

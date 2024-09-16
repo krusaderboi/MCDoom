@@ -1,11 +1,10 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.network.packet.EntityPacket;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.platform.Services;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
@@ -23,14 +22,8 @@ public class DroneBoltEntity extends AbstractHurtingProjectile {
     }
 
     public DroneBoltEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float directHitDamage) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getDroneBoltEntity(), shooter, accelX, accelY, accelZ,
-                worldIn);
+        super(DoomMobs.DRONEBOLT.get(), accelX, accelY, accelZ, worldIn);
         this.directHitDamage = directHitDamage;
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override
@@ -45,7 +38,7 @@ public class DroneBoltEntity extends AbstractHurtingProjectile {
             explode();
             remove(RemovalReason.DISCARDED);
         }
-        this.playSound(Services.SOUNDS_HELPER.getROCKET_HIT(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.ROCKET_HIT.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     protected void explode() {
@@ -62,12 +55,11 @@ public class DroneBoltEntity extends AbstractHurtingProjectile {
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity), directHitDamage);
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }
-        this.playSound(Services.SOUNDS_HELPER.getUNMAKYR_FIRE(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.UNMAKYR_FIRE.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     @Override

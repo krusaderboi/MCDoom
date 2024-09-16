@@ -8,75 +8,60 @@ import mod.azure.doom.entities.tierboss.*;
 import mod.azure.doom.entities.tierfodder.*;
 import mod.azure.doom.entities.tierheavy.*;
 import mod.azure.doom.entities.tiersuperheavy.*;
-import mod.azure.doom.registry.FabricDoomEntities;
+import mod.azure.doom.registry.DoomMobs;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 
 public record MobAttributes() {
 
     public static void initialize() {
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.GLADIATOR, GladiatorEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ARCHVILE, ArchvileEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.BARON, BaronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.CACODEMON, CacodemonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.CHAINGUNNER,
-                ChaingunnerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.CYBERDEMON, CyberdemonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.HELLKNIGHT, HellknightEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.HELLKNIGHT2016,
-                Hellknight2016Entity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ICONOFSIN, IconofsinEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.IMP, ImpEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.IMP_STONE, ImpStoneEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ARACHNOTRON,
-                ArachnotronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.LOST_SOUL, LostSoulEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.LOST_SOUL_ETERNAL,
-                LostSoulEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.MANCUBUS, MancubusEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.MARAUDER, MarauderEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.PAIN, PainEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.PINKY, PinkyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.SPECTRE, SpectreEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.POSSESSEDSCIENTIST,
-                PossessedScientistEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.POSSESSEDSOLDIER,
-                PossessedSoldierEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.MECHAZOMBIE,
-                MechaZombieEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.REVENANT, RevenantEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.SHOTGUNGUY, ShotgunguyEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.SPIDERMASTERMIND,
-                SpiderMastermindEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.UNWILLING, UnwillingEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ZOMBIEMAN, ZombiemanEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.GORE_NEST, GoreNestEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.GARGOYLE, GargoyleEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.CUEBALL, CueBallEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.PROWLER, ProwlerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.DREADKNIGHT,
-                Hellknight2016Entity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.POSSESSEDWORKER,
-                PossessedScientistEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.DOOMHUNTER, DoomHunterEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.WHIPLASH, WhiplashEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.BARON2016, BaronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ARMORBARON,
-                ArmoredBaronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ARACHNOTRONETERNAL,
-                ArachnotronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.MAYKRDRONE, MaykrDroneEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.SPIDERMASTERMIND2016,
-                SpiderMastermindEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.BLOODMAYKR, BloodMaykrEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.ARCHMAKER, ArchMakyrEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.FIREBARON, FireBaronEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.TENTACLE, TentacleEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.MOTHERDEMON,
-                MotherDemonEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.TURRET, TurretEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.SUMMONER, SummonerEntity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.REVENANT2016,
-                Revenant2016Entity.createMobAttributes());
-        FabricDefaultAttributeRegistry.register(FabricDoomEntities.CARCASS, CarcassEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.GLADIATOR.get(), GladiatorEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ARCHVILE.get(), ArchvileEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.BARON.get(), BaronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.CACODEMON.get(), CacodemonEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.CHAINGUNNER.get(), ChaingunnerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.CYBERDEMON.get(), CyberdemonEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.HELLKNIGHT.get(), HellknightEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.HELLKNIGHT2016.get(), Hellknight2016Entity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ICONOFSIN.get(), IconofsinEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.IMP.get(), ImpEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.IMP_STONE.get(), ImpStoneEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ARACHNOTRON.get(), ArachnotronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.LOST_SOUL.get(), LostSoulEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.LOST_SOUL_ETERNAL.get(), LostSoulEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.MANCUBUS.get(), MancubusEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.MARAUDER.get(), MarauderEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.PAIN.get(), PainEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.PINKY.get(), PinkyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.SPECTRE.get(), SpectreEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.POSSESSEDSCIENTIST.get(), PossessedScientistEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.POSSESSEDSOLDIER.get(), PossessedSoldierEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.MECHAZOMBIE.get(), MechaZombieEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.REVENANT.get(), RevenantEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.SHOTGUNGUY.get(), ShotgunguyEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.SPIDERMASTERMIND.get(), SpiderMastermindEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.UNWILLING.get(), UnwillingEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ZOMBIEMAN.get(), ZombiemanEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.GORE_NEST.get(), GoreNestEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.GARGOYLE.get(), GargoyleEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.CUEBALL.get(), CueBallEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.PROWLER.get(), ProwlerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.DREADKNIGHT.get(), Hellknight2016Entity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.POSSESSEDWORKER.get(), PossessedScientistEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.DOOMHUNTER.get(), DoomHunterEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.WHIPLASH.get(), WhiplashEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.BARON2016.get(), BaronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ARMORBARON.get(), ArmoredBaronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ARACHNOTRONETERNAL.get(), ArachnotronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.MAYKRDRONE.get(), MaykrDroneEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.SPIDERMASTERMIND2016.get(), SpiderMastermindEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.BLOODMAYKR.get(), BloodMaykrEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.ARCHMAKER.get(), ArchMakyrEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.FIREBARON.get(), FireBaronEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.TENTACLE.get(), TentacleEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.MOTHERDEMON.get(), MotherDemonEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.TURRET.get(), TurretEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.SUMMONER.get(), SummonerEntity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.REVENANT2016.get(), Revenant2016Entity.createMobAttributes());
+        FabricDefaultAttributeRegistry.register(DoomMobs.CARCASS.get(), CarcassEntity.createMobAttributes());
     }
 }

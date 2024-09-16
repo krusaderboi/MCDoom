@@ -1,0 +1,20 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:chainsaw"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:iron_ingot"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "doom:gas_barrel"
+      },
+      "count": 1
+    }
+  ]
+}

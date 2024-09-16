@@ -1,11 +1,9 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.network.packet.EntityPacket;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.helper.CommonUtils;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -27,14 +25,8 @@ public class FireProjectile extends AbstractHurtingProjectile {
     }
 
     public FireProjectile(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float directHitDamage) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getFireEntity(), shooter, accelX, accelY, accelZ,
-                worldIn);
+        super(DoomMobs.FIRE.get(), accelX, accelY, accelZ, worldIn);
         this.directHitDamage = directHitDamage;
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override
@@ -84,10 +76,9 @@ public class FireProjectile extends AbstractHurtingProjectile {
             remove(RemovalReason.KILLED);
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().lava(), directHitDamage);
-                entity.setSecondsOnFire(15);
+                entity.setRemainingFireTicks(15);
             }
-            if (entity1 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity1 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }

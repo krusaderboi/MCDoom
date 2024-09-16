@@ -1,11 +1,31 @@
 package mod.azure.doom.entities.tierboss;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
+import mod.azure.azurelib.sblforked.api.SmartBrainOwner;
+import mod.azure.azurelib.sblforked.api.core.BrainActivityGroup;
+import mod.azure.azurelib.sblforked.api.core.SmartBrainProvider;
+import mod.azure.azurelib.sblforked.api.core.behaviour.FirstApplicableBehaviour;
+import mod.azure.azurelib.sblforked.api.core.behaviour.OneRandomBehaviour;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.look.LookAtTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.misc.Idle;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.move.MoveToWalkTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.move.StayWithinDistanceOfAttackTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.path.SetRandomWalkTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.target.InvalidateAttackTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.target.SetPlayerLookTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.target.SetRandomLookTarget;
+import mod.azure.azurelib.sblforked.api.core.behaviour.custom.target.TargetOrRetaliate;
+import mod.azure.azurelib.sblforked.api.core.sensor.ExtendedSensor;
+import mod.azure.azurelib.sblforked.api.core.sensor.custom.UnreachableTargetSensor;
+import mod.azure.azurelib.sblforked.api.core.sensor.vanilla.HurtBySensor;
+import mod.azure.azurelib.sblforked.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.DoomAnimationsDefault;
@@ -13,6 +33,7 @@ import mod.azure.doom.entities.ai.DemonFloatControl;
 import mod.azure.doom.entities.ai.goal.RandomFlyConvergeOnTargetGoal;
 import mod.azure.doom.entities.projectiles.entity.DoomFireEntity;
 import mod.azure.doom.entities.task.DemonProjectileAttack;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -35,35 +56,16 @@ import net.minecraft.world.entity.ai.Brain;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.behavior.LookAtTargetSink;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.SmartBrainOwner;
-import net.tslat.smartbrainlib.api.core.BrainActivityGroup;
-import net.tslat.smartbrainlib.api.core.SmartBrainProvider;
-import net.tslat.smartbrainlib.api.core.behaviour.FirstApplicableBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.OneRandomBehaviour;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.look.LookAtTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.misc.Idle;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.FloatToSurfaceOfFluid;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.MoveToWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.move.StayWithinDistanceOfAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetRandomWalkTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.path.SetWalkTargetToAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.InvalidateAttackTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetPlayerLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.SetRandomLookTarget;
-import net.tslat.smartbrainlib.api.core.behaviour.custom.target.TargetOrRetaliate;
-import net.tslat.smartbrainlib.api.core.sensor.ExtendedSensor;
-import net.tslat.smartbrainlib.api.core.sensor.custom.UnreachableTargetSensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.HurtBySensor;
-import net.tslat.smartbrainlib.api.core.sensor.vanilla.NearbyLivingEntitySensor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -136,7 +138,7 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
         if (deathTime == 40 && entityData.get(DEATH_STATE) == 5) {
             level().broadcastEntityEvent(this, (byte) 60);
             remove(Entity.RemovalReason.KILLED);
-            dropExperience();
+            dropExperience(this);
         }
     }
 
@@ -159,7 +161,6 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
                 areaeffectcloudentity.setDuration(55);
                 areaeffectcloudentity.setPos(this.getX(), this.getY(), this.getZ());
                 level().addFreshEntity(areaeffectcloudentity);
-                goalSelector.getRunningGoals().forEach(WrappedGoal::stop);
                 level().broadcastEntityEvent(this, (byte) 3);
             }
             if (entityData.get(DEATH_STATE) == 5) super.die(source);
@@ -276,10 +277,10 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        entityData.define(VARIANT, 0);
-        entityData.define(DEATH_STATE, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(VARIANT, 0);
+        builder.define(DEATH_STATE, 0);
     }
 
     @Override
@@ -315,30 +316,30 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
     }
 
     @Override
-    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor worldIn, @NotNull DifficultyInstance difficultyIn, @NotNull MobSpawnType reason, SpawnGroupData spawnDataIn, CompoundTag dataTag) {
-        spawnDataIn = super.finalizeSpawn(worldIn, difficultyIn, reason, spawnDataIn, dataTag);
+    public SpawnGroupData finalizeSpawn(@NotNull ServerLevelAccessor level, @NotNull DifficultyInstance difficulty, @NotNull MobSpawnType spawnType, @Nullable SpawnGroupData spawnGroupData) {
+        spawnGroupData = super.finalizeSpawn(level, difficulty, spawnType, spawnGroupData);
         setVariant(getRandom().nextInt());
-        return spawnDataIn;
+        return spawnGroupData;
     }
 
     @Override
-    protected float getStandingEyeHeight(@NotNull Pose poseIn, @NotNull EntityDimensions sizeIn) {
-        return 1.5F;
+    public double getEyeY() {
+        return 1.5;
     }
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return mod.azure.doom.platform.Services.SOUNDS_HELPER.getMAKYR_AMBIENT();
+        return DoomSounds.MAKYR_AMBIENT.get();
     }
 
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource damageSourceIn) {
-        return mod.azure.doom.platform.Services.SOUNDS_HELPER.getMAKYR_HURT();
+        return DoomSounds.MAKYR_HURT.get();
     }
 
     @Override
     protected SoundEvent getDeathSound() {
-        return mod.azure.doom.platform.Services.SOUNDS_HELPER.getMAKYR_DEATH();
+        return DoomSounds.MAKYR_DEATH.get();
     }
 
     @Override
@@ -411,7 +412,7 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
         if (flag) {
             final var fire = new DoomFireEntity(level(), x, blockpos.getY() + d0, z, 1, this,
                     MCDoom.config.archmaykr_ranged_damage + getExtraDamage());
-            fire.setSecondsOnFire(tickCount);
+            fire.setRemainingFireTicks(tickCount);
             fire.setInvisible(false);
             level().addFreshEntity(fire);
         }
@@ -447,7 +448,7 @@ public class ArchMakyrEntity extends DemonEntity implements SmartBrainOwner<Arch
     }
 
     @Override
-    public boolean ignoreExplosion() {
+    public boolean ignoreExplosion(@NotNull Explosion explosion) {
         return true;
     }
 

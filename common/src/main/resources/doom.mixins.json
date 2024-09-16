@@ -5,16 +5,5 @@
   "refmap": "doom.refmap.json",
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "PlayerEntityMixin",
-    "VillagerMixin"
-  ],
-  "client": [
-    "ClientPlayNetworkHandlerMixin",
-    "GeoEntityRendererMixin",
-    "HeldItemRendererMixin",
-    "LivingEntityRenderMixin",
-    "WeaponRenderingMixin"
-  ]
+  }
 }

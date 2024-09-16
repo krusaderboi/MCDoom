@@ -1,7 +1,9 @@
 package mod.azure.doom.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mod.azure.doom.blocks.blockentities.IconBlockEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomBlocks;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -20,28 +22,20 @@ import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.level.block.state.pattern.BlockPattern;
 import net.minecraft.world.level.block.state.pattern.BlockPatternBuilder;
 import net.minecraft.world.level.block.state.predicate.BlockStatePredicate;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.ToIntFunction;
-
 public class DoomWallBlock extends BaseEntityBlock {
 
     public static final BooleanProperty light = RedstoneTorchBlock.LIT;
-
     @Nullable
     private static BlockPattern iconPatternFull;
+    public static final MapCodec<BaseEntityBlock> CODEC = simpleCodec(DoomWallBlock::new);
 
-    public DoomWallBlock() {
-        super(Properties.of().explosionResistance(30).strength(4.0F).sound(SoundType.METAL).lightLevel(
-                litBlockEmission(15)));
+    public DoomWallBlock(Properties properties) {
+        super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(light, Boolean.TRUE));
-    }
-
-    private static ToIntFunction<BlockState> litBlockEmission(int lightLevel) {
-        return lightLevel1 -> BlockStateProperties.MAX_LEVEL_15;
     }
 
     public static void checkIconSpawn(Level worldIn, BlockPos pos, IconBlockEntity tileEntityIn) {
@@ -58,7 +52,7 @@ public class DoomWallBlock extends BaseEntityBlock {
                             worldIn.levelEvent(2001, cachedblockinfo.getPos(), Block.getId(cachedblockinfo.getState()));
                         }
 
-                    var witherentity = Services.ENTITIES_HELPER.getIconofSinEntity().create(worldIn);
+                    var witherentity = DoomMobs.ICONOFSIN.get().create(worldIn);
                     var blockpos = patternHelper.getBlock(1, 2, 0).getPos();
                     assert witherentity != null;
                     witherentity.moveTo(blockpos.getX() + 0.5D, blockpos.getY() + 0.55D, blockpos.getZ() + 0.5D,
@@ -82,28 +76,28 @@ public class DoomWallBlock extends BaseEntityBlock {
 
     private static boolean isFlag(IconBlockEntity tileEntityIn) {
         var block = tileEntityIn.getBlockState().getBlock();
-        return block == Services.BLOCKS_HELPER.getWall1() || block == Services.BLOCKS_HELPER.getWall2() || block == Services.BLOCKS_HELPER.getWall3() || block == Services.BLOCKS_HELPER.getWall4() || block == Services.BLOCKS_HELPER.getWall5() || block == Services.BLOCKS_HELPER.getWall6() || block == Services.BLOCKS_HELPER.getWall7() || block == Services.BLOCKS_HELPER.getWall8() || block == Services.BLOCKS_HELPER.getWall9() || block == Services.BLOCKS_HELPER.getWall10() || block == Services.BLOCKS_HELPER.getWall11() || block == Services.BLOCKS_HELPER.getWall12() || block == Services.BLOCKS_HELPER.getWall13() || block == Services.BLOCKS_HELPER.getWall14() || block == Services.BLOCKS_HELPER.getWall15() || block == Services.BLOCKS_HELPER.getWall16();
+        return block == DoomBlocks.ICON_WALL1.get() || block == DoomBlocks.ICON_WALL2.get() || block == DoomBlocks.ICON_WALL3.get() || block == DoomBlocks.ICON_WALL4.get() || block == DoomBlocks.ICON_WALL5.get() || block == DoomBlocks.ICON_WALL6.get() || block == DoomBlocks.ICON_WALL7.get() || block == DoomBlocks.ICON_WALL8.get() || block == DoomBlocks.ICON_WALL9.get() || block == DoomBlocks.ICON_WALL10.get() || block == DoomBlocks.ICON_WALL11.get() || block == DoomBlocks.ICON_WALL12.get() || block == DoomBlocks.ICON_WALL13.get() || block == DoomBlocks.ICON_WALL14.get() || block == DoomBlocks.ICON_WALL15.get() || block == DoomBlocks.ICON_WALL16.get();
     }
 
     public static BlockPattern getOrCreateIconFull() {
         if (iconPatternFull == null) {
             iconPatternFull = BlockPatternBuilder.start().aisle("!@#$", "%^&*", "()-_", "+=12").where('!',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall1()))).where('@',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall2()))).where('#',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall3()))).where('$',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall4()))).where('%',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall5()))).where('^',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall6()))).where('&',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall7()))).where('*',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall8()))).where('(',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall9()))).where(')',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall10()))).where('-',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall11()))).where('_',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall12()))).where('+',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall13()))).where('=',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall14()))).where('1',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall15()))).where('2',
-                    BlockInWorld.hasState(BlockStatePredicate.forBlock(Services.BLOCKS_HELPER.getWall16()))).build();
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL1.get()))).where('@',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL2.get()))).where('#',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL3.get()))).where('$',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL4.get()))).where('%',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL5.get()))).where('^',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL6.get()))).where('&',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL7.get()))).where('*',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL8.get()))).where('(',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL9.get()))).where(')',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL10.get()))).where('-',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL11.get()))).where('_',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL12.get()))).where('+',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL13.get()))).where('=',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL14.get()))).where('1',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL15.get()))).where('2',
+                    BlockInWorld.hasState(BlockStatePredicate.forBlock(DoomBlocks.ICON_WALL16.get()))).build();
         }
         return iconPatternFull;
     }
@@ -122,7 +116,12 @@ public class DoomWallBlock extends BaseEntityBlock {
 
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return Services.ENTITIES_HELPER.getIconBlockEntity().create(pos, state);
+        return DoomMobs.ICON_BLOCK.get().create(pos, state);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

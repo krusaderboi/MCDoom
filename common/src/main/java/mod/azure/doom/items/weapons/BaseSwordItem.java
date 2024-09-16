@@ -1,24 +1,26 @@
 package mod.azure.doom.items.weapons;
 
-import mod.azure.azurelib.Keybindings;
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.SingletonGeoAnimatable;
-import mod.azure.azurelib.animatable.client.RenderProvider;
+import commonnetwork.api.Network;
+import mod.azure.azurelib.common.api.client.helper.ClientUtils;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.common.animatable.SingletonGeoAnimatable;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.Animation;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.client.render.weapons.MeleeRender;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.tierboss.*;
 import mod.azure.doom.helper.CommonUtils;
-import mod.azure.doom.items.enums.DoomTier;
 import mod.azure.doom.items.enums.MeleeWeaponEnum;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.network.ReloadMeleePacket;
+import mod.azure.doom.registry.DoomItems;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.core.particles.ParticleTypes;
@@ -32,11 +34,7 @@ import net.minecraft.world.entity.AreaEffectCloud;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -44,16 +42,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     private static final String controller = "controller";
     protected final MeleeWeaponEnum meleeWeaponEnum;
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
     protected BaseSwordItem(MeleeWeaponEnum meleeWeaponEnum, int maxUses) {
-        super(DoomTier.DOOM_HIGHTEIR, 1, -2.5f, new Properties().stacksTo(1).durability(maxUses + 1));
+        super(Tiers.NETHERITE, new Properties().stacksTo(1).durability(maxUses + 1));
         this.meleeWeaponEnum = meleeWeaponEnum;
         SingletonGeoAnimatable.registerSyncedAnimatable(this);
     }
@@ -64,7 +60,7 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
                     hand).getDamageValue() != 0 && user.getInventory().countItem(swordItem.getAmmoType()) > 0) {
                 CommonUtils.removeAmmo(swordItem.getAmmoType(), user);
                 user.getCooldowns().addCooldown(swordItem, 5);
-                user.getItemInHand(hand).hurtAndBreak(-5, user, s -> user.broadcastBreakEvent(hand));
+                user.getItemInHand(hand).hurtAndBreak(-5, user, user.getEquipmentSlotForItem(user.getItemInHand(hand)));
                 user.getItemInHand(hand).setPopTime(3);
             }
         }
@@ -77,13 +73,13 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     public Item getAmmoType() {
         switch (this.getmeleeWeaponEnum()) {
             case CHAINSAW, CHAINSAW_64, ETERNAL_CHAINSAW -> {
-                return Services.ITEMS_HELPER.getGasItem();
+                return DoomItems.GAS_BARREL.get();
             }
             case MARAUDER_AXE, DARK_CRUCIBLE, CRUCIBLE -> {
-                return Services.ITEMS_HELPER.getArgentBlock();
+                return DoomItems.ARGENT_BLOCK.get();
             }
             default -> {
-                return Services.ITEMS_HELPER.getArgentEngery();
+                return DoomItems.ARGENT_ENERGY.get();
             }
         }
     }
@@ -99,10 +95,8 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
         if (!level.isClientSide && this.meleeWeaponEnum == MeleeWeaponEnum.ETERNAL_CHAINSAW) {
             triggerAnim(playerentity, GeoItem.getOrAssignId(stack, (ServerLevel) level), controller, "running");
         }
-        if (level.isClientSide && playerentity.getMainHandItem().getItem() instanceof BaseSwordItem && selected) {
-            if (Keybindings.RELOAD.consumeClick()) {
-                Services.NETWORK.reloadMelee(slot);
-            }
+        if (level.isClientSide && playerentity.getMainHandItem().getItem() instanceof BaseSwordItem && selected && ClientUtils.RELOAD.consumeClick()) {
+            Network.getNetworkHandler().sendToServer(new ReloadMeleePacket());
         }
     }
 
@@ -115,7 +109,7 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
                 playerentity.level().getEntities(playerentity, aabb).forEach(e -> doDeathCheck(playerentity, e, stack));
                 playerentity.level().getEntities(playerentity, aabb).forEach(this::addParticle);
             }
-            stack.hurtAndBreak(1, playerentity, p -> p.broadcastBreakEvent(playerentity.getUsedItemHand()));
+            stack.hurtAndBreak(-5, playerentity, playerentity.getEquipmentSlotForItem(stack));
             if (swordItem.getmeleeWeaponEnum() == MeleeWeaponEnum.SENTINEL_HAMMER) {
                 final var aoeEntity = new AreaEffectCloud(playerentity.level(), playerentity.getX(),
                         playerentity.getY(), playerentity.getZ());
@@ -132,14 +126,11 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     private void doDamage(ItemStack stack, LivingEntity user, Entity target) {
         if (target instanceof LivingEntity livingEntity) {
             target.invulnerableTime = 0;
-            if (EnchantmentHelper.getItemEnchantmentLevel(
-                    mod.azure.azurelib.platform.Services.PLATFORM.getIncendairyenchament(), stack) > 0)
-                target.setSecondsOnFire(100);
             switch (getmeleeWeaponEnum()) {
                 case CHAINSAW, CHAINSAW_64, ETERNAL_CHAINSAW -> {
                     target.hurt(user.damageSources().playerAttack((Player) user), MCDoom.config.chainsaw_damage);
                     user.level().playSound(null, user.getX(), user.getY(), user.getZ(),
-                            Services.SOUNDS_HELPER.getCHAINSAW_ATTACKING(), SoundSource.PLAYERS, 0.3F,
+                            DoomSounds.CHAINSAW_ATTACKING.get(), SoundSource.PLAYERS, 0.3F,
                             1.0F / (user.level().random.nextFloat() * 0.4F + 1.2F) + 0.25F * 0.5F);
                 }
                 case MARAUDER_AXE -> target.hurt(user.damageSources().playerAttack((Player) user),
@@ -157,9 +148,9 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     }
 
     private void doDeathCheck(LivingEntity user, Entity target, ItemStack stack) {
-        final var givenList = Arrays.asList(Services.ITEMS_HELPER.getChaingunBullets(),
-                Services.ITEMS_HELPER.getShells(), Services.ITEMS_HELPER.getArgentBolts(),
-                Services.ITEMS_HELPER.getEngeryCell(), Services.ITEMS_HELPER.getRocket());
+        final var givenList = Arrays.asList(DoomItems.CHAINGUN_BULLETS.get(),
+                DoomItems.SHOTGUN_SHELLS.get(), DoomItems.ARGENT_BOLT.get(),
+                DoomItems.ENERGY_CELLS.get(), DoomItems.ROCKET.get());
         if (target instanceof DemonEntity && ((LivingEntity) target).isDeadOrDying() && user instanceof Player playerentity && stack.getDamageValue() < stack.getMaxDamage() - 1 && !playerentity.getCooldowns().isOnCooldown(
                 this)) for (@SuppressWarnings("unused") final var i = 0; i < 5; ) {
             final var randomIndex = user.getRandom().nextInt(givenList.size());
@@ -176,39 +167,34 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     }
 
     @Override
-    public int getUseDuration(@NotNull ItemStack stack) {
+    public int getUseDuration(@NotNull ItemStack stack, @NotNull LivingEntity entity) {
         return 72000;
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, Level worldIn, @NotNull List<Component> tooltip, @NotNull TooltipFlag flagIn) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @NotNull TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
         if (this.getmeleeWeaponEnum() == MeleeWeaponEnum.CHAINSAW || this.getmeleeWeaponEnum() == MeleeWeaponEnum.CHAINSAW_64 || this.getmeleeWeaponEnum() == MeleeWeaponEnum.ETERNAL_CHAINSAW) {
-            tooltip.add(Component.translatable(
-                    "Fuel: " + (stack.getMaxDamage() - stack.getDamageValue() - 1) + " / " + (stack.getMaxDamage() - 1)).withStyle(
+            list.add(Component.translatable(
+                    "Fuel: " + (itemStack.getMaxDamage() - itemStack.getDamageValue() - 1) + " / " + (itemStack.getMaxDamage() - 1)).withStyle(
                     ChatFormatting.ITALIC));
         }
         if (this.getmeleeWeaponEnum() == MeleeWeaponEnum.DARK_CRUCIBLE || this.getmeleeWeaponEnum() == MeleeWeaponEnum.CRUCIBLE)
-            tooltip.add(Component.translatable("doom.crucible_sword.text").withStyle(ChatFormatting.RED).withStyle(
+            list.add(Component.translatable("doom.crucible_sword.text").withStyle(ChatFormatting.RED).withStyle(
                     ChatFormatting.ITALIC));
         if (this.getmeleeWeaponEnum() == MeleeWeaponEnum.MARAUDER_AXE) {
-            tooltip.add(Component.translatable("doom.marauder_axe1.text").withStyle(ChatFormatting.RED).withStyle(
+            list.add(Component.translatable("doom.marauder_axe1.text").withStyle(ChatFormatting.RED).withStyle(
                     ChatFormatting.ITALIC));
-            tooltip.add(Component.translatable("doom.marauder_axe2.text").withStyle(ChatFormatting.RED).withStyle(
+            list.add(Component.translatable("doom.marauder_axe2.text").withStyle(ChatFormatting.RED).withStyle(
                     ChatFormatting.ITALIC));
-            tooltip.add(Component.translatable("doom.marauder_axe3.text").withStyle(ChatFormatting.RED).withStyle(
+            list.add(Component.translatable("doom.marauder_axe3.text").withStyle(ChatFormatting.RED).withStyle(
                     ChatFormatting.ITALIC));
         }
         if (this.getmeleeWeaponEnum() == MeleeWeaponEnum.SENTINEL_HAMMER || this.getmeleeWeaponEnum() == MeleeWeaponEnum.DARK_CRUCIBLE || this.getmeleeWeaponEnum() == MeleeWeaponEnum.CRUCIBLE || this.getmeleeWeaponEnum() == MeleeWeaponEnum.MARAUDER_AXE) {
-            tooltip.add(Component.translatable(
-                    "Ammo: " + (stack.getMaxDamage() - stack.getDamageValue() - 1) + " / " + (stack.getMaxDamage() - 1)).withStyle(
+            list.add(Component.translatable(
+                    "Ammo: " + (itemStack.getMaxDamage() - itemStack.getDamageValue() - 1) + " / " + (itemStack.getMaxDamage() - 1)).withStyle(
                     ChatFormatting.ITALIC));
         }
-        super.appendHoverText(stack, worldIn, tooltip, flagIn);
-    }
-
-    @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
+        super.appendHoverText(itemStack, context, list, tooltipFlag);
     }
 
     @Override
@@ -226,7 +212,7 @@ public abstract class BaseSwordItem extends SwordItem implements GeoItem {
     }
 
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createRenderer(Consumer<RenderProvider> consumer) {
         consumer.accept(new RenderProvider() {
             private final MeleeRender<BaseSwordItem> renderer = null;
 

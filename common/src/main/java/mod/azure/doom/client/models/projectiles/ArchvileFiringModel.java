@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.projectiles;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.projectiles.entity.DoomFireEntity;
 import net.minecraft.client.renderer.RenderType;

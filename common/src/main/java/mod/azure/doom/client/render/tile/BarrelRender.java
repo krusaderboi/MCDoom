@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BarrelRender extends EntityRenderer<BarrelEntity> {
 
-    protected static final ResourceLocation TEXTURE = new ResourceLocation(MCDoom.MOD_ID,
+    protected static final ResourceLocation TEXTURE = ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
             "textures/blocks/barrel_explode.png");
 
     public BarrelRender(EntityRendererProvider.Context context) {

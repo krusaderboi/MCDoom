@@ -1,0 +1,32 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:axe_marauder_open"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 64
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:ghast_tear"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "doom:axe_marauder_closed"
+      },
+      "count": 1
+    }
+  ]
+}

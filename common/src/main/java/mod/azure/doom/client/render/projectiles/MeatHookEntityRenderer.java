@@ -3,9 +3,9 @@ package mod.azure.doom.client.render.projectiles;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
-import mod.azure.azurelib.util.RenderUtils;
+import mod.azure.azurelib.common.api.client.renderer.GeoEntityRenderer;
+import mod.azure.azurelib.common.internal.client.util.RenderUtils;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.client.models.projectiles.MeatHookEntityModel;
 import mod.azure.doom.entities.projectiles.MeatHookEntity;
@@ -17,6 +17,7 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class MeatHookEntityRenderer extends GeoEntityRenderer<MeatHookEntity> {
 
@@ -31,20 +32,19 @@ public class MeatHookEntityRenderer extends GeoEntityRenderer<MeatHookEntity> {
     }
 
     @Override
-    protected int getBlockLightLevel(MeatHookEntity entityIn, BlockPos partialTicks) {
+    protected int getBlockLightLevel(@NotNull MeatHookEntity entityIn, @NotNull BlockPos partialTicks) {
         return 15;
     }
 
     @Override
-    public void preRender(PoseStack poseStack, MeatHookEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, MeatHookEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int color) {
         RenderUtils.faceRotation(poseStack, animatable, partialTick);
         if (animatable.getVariant() == 1) poseStack.scale(0, 0, 0);
-        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
-                packedOverlay, red, green, blue, alpha);
+        super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight, packedOverlay, color);
     }
 
     @Override
-    public void render(MeatHookEntity hookshot, float yaw, float tickDelta, PoseStack poseStack, MultiBufferSource provider, int light) {
+    public void render(@NotNull MeatHookEntity hookshot, float yaw, float tickDelta, @NotNull PoseStack poseStack, @NotNull MultiBufferSource provider, int light) {
         super.render(hookshot, yaw, tickDelta, poseStack, provider, light);
         if (hookshot.getOwner() instanceof Player player && player.getMainHandItem().getItem() instanceof DoomBaseItem gunItem) {
             poseStack.pushPose();
@@ -92,14 +92,14 @@ public class MeatHookEntityRenderer extends GeoEntityRenderer<MeatHookEntity> {
         var matrix4f = entry.pose();
         var matrix3f = entry.normal();
 
-        vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+        vertexConsumer.addVertex(matrix4f, vertX1, vertY1, 0F).setColor(0, 0, 0, 255).setUv(minU, minV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX1, vertY1, length).setColor(255, 255, 255, 255).setUv(minU, maxV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX2, vertY2, length).setColor(255, 255, 255, 255).setUv(maxU, maxV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX2, vertY2, 0F).setColor(0, 0, 0, 255).setUv(maxU, minV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
 
         poseStack.popPose();
         poseStack.mulPose(Axis.ZP.rotation(90));
@@ -108,15 +108,14 @@ public class MeatHookEntityRenderer extends GeoEntityRenderer<MeatHookEntity> {
         entry = poseStack.last();
         matrix4f = entry.pose();
         matrix3f = entry.normal();
-
-        vertexConsumer.vertex(matrix4f, vertX1, vertY1, 0F).color(0, 0, 0, 255).uv(minU, minV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX1, vertY1, length).color(255, 255, 255, 255).uv(minU, maxV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX2, vertY2, length).color(255, 255, 255, 255).uv(maxU, maxV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-        vertexConsumer.vertex(matrix4f, vertX2, vertY2, 0F).color(0, 0, 0, 255).uv(maxU, minV).overlayCoords(
-                OverlayTexture.NO_OVERLAY).uv2(light).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
+        vertexConsumer.addVertex(matrix4f, vertX1, vertY1, 0F).setColor(0, 0, 0, 255).setUv(minU, minV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX1, vertY1, length).setColor(255, 255, 255, 255).setUv(minU, maxV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX2, vertY2, length).setColor(255, 255, 255, 255).setUv(maxU, maxV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
+        vertexConsumer.addVertex(matrix4f, vertX2, vertY2, 0F).setColor(0, 0, 0, 255).setUv(maxU, minV).setOverlay(
+                OverlayTexture.NO_OVERLAY).setUv2(light, 0).setNormal(0.0F, -1.0F, 0.0F);
 
         poseStack.popPose();
     }

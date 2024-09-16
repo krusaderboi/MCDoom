@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.mobs.fodder;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierfodder.LostSoulEntity;
 import net.minecraft.client.renderer.RenderType;

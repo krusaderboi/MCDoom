@@ -1,38 +1,33 @@
 package mod.azure.doom.items.armor;
 
-import mod.azure.azurelib.animatable.GeoItem;
-import mod.azure.azurelib.animatable.client.RenderProvider;
+import mod.azure.azurelib.common.api.common.animatable.GeoItem;
+import mod.azure.azurelib.common.internal.client.RenderProvider;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.animation.RawAnimation;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.client.render.armors.DoomRender;
 import mod.azure.doom.items.enums.ArmorTypeEnum;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.item.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public abstract class DoomArmor extends ArmorItem implements GeoItem {
 
     protected final ArmorTypeEnum armorTypeEnum;
-    private final Supplier<Object> renderProvider = GeoItem.makeRenderer(this);
     private final AnimatableInstanceCache cache = AzureLibUtil.createInstanceCache(this);
 
-    protected DoomArmor(ArmorMaterial materialIn, Type slot, ArmorTypeEnum armorTypeEnum) {
-        super(materialIn, slot, new Properties().stacksTo(1));
+    protected DoomArmor(Type slot, ArmorTypeEnum armorTypeEnum) {
+        super(ArmorMaterials.NETHERITE, slot, new Properties().stacksTo(1));
         this.armorTypeEnum = armorTypeEnum;
     }
 
@@ -42,7 +37,7 @@ public abstract class DoomArmor extends ArmorItem implements GeoItem {
 
     // Create our armor model/renderer for Fabric and return it
     @Override
-    public void createRenderer(Consumer<Object> consumer) {
+    public void createRenderer(Consumer<RenderProvider> consumer) {
         consumer.accept(new RenderProvider() {
             private DoomRender<?> renderer;
 
@@ -57,11 +52,6 @@ public abstract class DoomArmor extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public Supplier<Object> getRenderProvider() {
-        return renderProvider;
-    }
-
-    @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
         controllers.add(new AnimationController<>(this, 20,
                 state -> state.setAndContinue(RawAnimation.begin().thenLoop("idle"))));
@@ -73,7 +63,7 @@ public abstract class DoomArmor extends ArmorItem implements GeoItem {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack itemStack, Level level, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @NotNull TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
         switch (this.getArmorTypeEnum()) {
             case ASTRO -> list.add(
                     Component.translatable("doom.astroarmor.text").withStyle(ChatFormatting.YELLOW).withStyle(
@@ -152,7 +142,7 @@ public abstract class DoomArmor extends ArmorItem implements GeoItem {
                             ChatFormatting.ITALIC));
 
         }
-        super.appendHoverText(itemStack, level, list, tooltipFlag);
+        super.appendHoverText(itemStack, context, list, tooltipFlag);
     }
 
 }

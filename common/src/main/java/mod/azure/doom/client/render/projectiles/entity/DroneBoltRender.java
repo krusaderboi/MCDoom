@@ -72,9 +72,8 @@ public class DroneBoltRender extends EntityRenderer<DroneBoltEntity> {
     }
 
     public void vertex(Matrix4f matrix4f, Matrix3f matrix3f, VertexConsumer vertexConsumer, int i, int j, int k, float f, float g, int l, int m, int n, int o) {
-        vertexConsumer.vertex(matrix4f, (float) i, (float) j, (float) k).color(255, 255, 255, 255).uv(f,
-                g).overlayCoords(OverlayTexture.NO_OVERLAY).uv2(o).normal(matrix3f, (float) l, (float) n,
-                (float) m).endVertex();
+        vertexConsumer.addVertex(matrix4f, i, j, k).setColor(255, 255, 255, 255).setUv(f,
+                g).setOverlay(OverlayTexture.NO_OVERLAY).setUv2(o, 1).setNormal(l, n, m);
     }
 
 }

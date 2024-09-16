@@ -1,6 +1,5 @@
 package mod.azure.doom.client.render.mobs.heavy;
 
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import mod.azure.doom.client.models.mobs.heavy.PinkyModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierheavy.PinkyEntity;

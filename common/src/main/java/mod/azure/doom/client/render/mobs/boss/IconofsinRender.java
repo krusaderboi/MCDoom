@@ -2,7 +2,7 @@ package mod.azure.doom.client.render.mobs.boss;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import mod.azure.azurelib.cache.object.BakedGeoModel;
+import mod.azure.azurelib.common.internal.common.cache.object.BakedGeoModel;
 import mod.azure.doom.client.models.mobs.boss.IconofsinModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierboss.IconofsinEntity;
@@ -16,9 +16,9 @@ public class IconofsinRender extends DoomMobRender<IconofsinEntity> {
     }
 
     @Override
-    public void preRender(PoseStack poseStack, IconofsinEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void preRender(PoseStack poseStack, IconofsinEntity animatable, BakedGeoModel model, MultiBufferSource bufferSource, VertexConsumer buffer, boolean isReRender, float partialTick, int packedLight, int packedOverlay, int colour) {
         super.preRender(poseStack, animatable, model, bufferSource, buffer, isReRender, partialTick, packedLight,
-                packedOverlay, red, green, blue, alpha);
+                packedOverlay, colour);
         final float health = animatable.getHealth();
         final float maxhealth = animatable.getMaxHealth();
         poseStack.scale(2F, 2F, 2F);
@@ -190,5 +190,4 @@ public class IconofsinRender extends DoomMobRender<IconofsinEntity> {
             }
         }
     }
-
 }

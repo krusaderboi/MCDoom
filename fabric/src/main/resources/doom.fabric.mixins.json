@@ -6,8 +6,15 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AnvilScreenHandlerMixin",
+    "PlayerEntityMixin",
+    "VillagerMixin",
     "IngredientAccess",
     "LivingEntityMixin"
+  ],
+  "client": [
+    "ClientPlayNetworkHandlerMixin",
+    "GeoEntityRendererMixin",
+    "HeldItemRendererMixin",
+    "WeaponRenderingMixin"
   ]
 }

@@ -1,6 +1,6 @@
 package mod.azure.doom.client.render.mobs.superheavy;
 
-import mod.azure.azurelib.renderer.layer.AutoGlowingGeoLayer;
+import mod.azure.azurelib.common.api.client.renderer.layer.AutoGlowingGeoLayer;
 import mod.azure.doom.client.models.mobs.superheavy.MarauderModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tiersuperheavy.MarauderEntity;

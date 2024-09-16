@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:chaingun"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 10
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:iron_bars"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 3
+    }
+  ]
+}

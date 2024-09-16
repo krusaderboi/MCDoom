@@ -1,5 +1,6 @@
 package mod.azure.doom.entities.task;
 
+import mod.azure.azurelib.sblforked.api.core.behaviour.ExtendedBehaviour;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.tierboss.GladiatorEntity;
 import mod.azure.doom.entities.tierboss.IconofsinEntity;
@@ -11,7 +12,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.phys.Vec3;
-import net.tslat.smartbrainlib.api.core.behaviour.ExtendedBehaviour;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;

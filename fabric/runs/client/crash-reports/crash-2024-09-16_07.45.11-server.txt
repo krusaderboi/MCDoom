@@ -1,0 +1,193 @@
+---- Minecraft Crash Report ----
+// I let you down. Sorry :(
+
+Time: 2024-09-16 07:45:11
+Description: Saving entity NBT
+
+java.lang.IllegalStateException: Cannot encode empty ItemStack
+	at net.minecraft.world.item.ItemStack.save(ItemStack.java:401)
+	at net.minecraft.world.entity.projectile.AbstractArrow.addAdditionalSaveData(AbstractArrow.java:541)
+	at net.minecraft.world.entity.Entity.saveWithoutId(Entity.java:1922)
+	at net.minecraft.world.entity.Entity.saveAsPassenger(Entity.java:1858)
+	at net.minecraft.world.entity.Entity.save(Entity.java:1866)
+	at net.minecraft.world.level.chunk.storage.EntityStorage.method_31734(EntityStorage.java:109)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at net.minecraft.world.level.chunk.storage.EntityStorage.storeEntities(EntityStorage.java:107)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.storeChunkSections(PersistentEntitySectionManager.java:299)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.method_31846(PersistentEntitySectionManager.java:380)
+	at it.unimi.dsi.fastutil.longs.LongOpenHashSet.forEach(LongOpenHashSet.java:760)
+	at it.unimi.dsi.fastutil.longs.LongIterable.forEach(LongIterable.java:146)
+	at it.unimi.dsi.fastutil.longs.AbstractLongCollection.forEach(AbstractLongCollection.java:153)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.autoSave(PersistentEntitySectionManager.java:374)
+	at net.minecraft.server.level.ServerLevel.save(ServerLevel.java:825)
+	at net.minecraft.server.MinecraftServer.saveAllChunks(MinecraftServer.java:556)
+	at net.minecraft.server.MinecraftServer.saveEverything(MinecraftServer.java:580)
+	at net.minecraft.client.server.IntegratedServer.saveEverything(IntegratedServer.java:318)
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:96)
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:697)
+	at net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:281)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+
+A detailed walkthrough of the error, its code path and all known details is as follows:
+---------------------------------------------------------------------------------------
+
+-- Head --
+Thread: Server thread
+Stacktrace:
+	at net.minecraft.world.item.ItemStack.save(ItemStack.java:401)
+	at net.minecraft.world.entity.projectile.AbstractArrow.addAdditionalSaveData(AbstractArrow.java:541)
+
+-- Entity being saved --
+Details:
+	Entity Type: doom:bfg_cell (null)
+	Entity ID: 283
+	Entity Name: entity.doom.bfg_cell
+	Entity's Exact location: 0.00, 0.00, 0.00
+	Entity's Block location: World: (0,0,0), Section: (at 0,0,0 in 0,0,0; chunk contains blocks 0,-64,0 to 15,319,15), Region: (0,0; contains chunks 0,0 to 31,31, blocks 0,-64,0 to 511,319,511)
+	Entity's Momentum: -0.26, 0.43, 0.56
+	Entity's Passengers: []
+	Entity's Vehicle: null
+Stacktrace:
+	at net.minecraft.world.entity.Entity.saveWithoutId(Entity.java:1922)
+	at net.minecraft.world.entity.Entity.saveAsPassenger(Entity.java:1858)
+	at net.minecraft.world.entity.Entity.save(Entity.java:1866)
+	at net.minecraft.world.level.chunk.storage.EntityStorage.method_31734(EntityStorage.java:109)
+	at java.base/java.util.ArrayList$ArrayListSpliterator.forEachRemaining(ArrayList.java:1708)
+	at java.base/java.util.stream.ReferencePipeline$Head.forEach(ReferencePipeline.java:762)
+	at net.minecraft.world.level.chunk.storage.EntityStorage.storeEntities(EntityStorage.java:107)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.storeChunkSections(PersistentEntitySectionManager.java:299)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.method_31846(PersistentEntitySectionManager.java:380)
+	at it.unimi.dsi.fastutil.longs.LongOpenHashSet.forEach(LongOpenHashSet.java:760)
+	at it.unimi.dsi.fastutil.longs.LongIterable.forEach(LongIterable.java:146)
+	at it.unimi.dsi.fastutil.longs.AbstractLongCollection.forEach(AbstractLongCollection.java:153)
+	at net.minecraft.world.level.entity.PersistentEntitySectionManager.autoSave(PersistentEntitySectionManager.java:374)
+	at net.minecraft.server.level.ServerLevel.save(ServerLevel.java:825)
+	at net.minecraft.server.MinecraftServer.saveAllChunks(MinecraftServer.java:556)
+	at net.minecraft.server.MinecraftServer.saveEverything(MinecraftServer.java:580)
+	at net.minecraft.client.server.IntegratedServer.saveEverything(IntegratedServer.java:318)
+	at net.minecraft.client.server.IntegratedServer.tickServer(IntegratedServer.java:96)
+	at net.minecraft.server.MinecraftServer.runServer(MinecraftServer.java:697)
+	at net.minecraft.server.MinecraftServer.method_29739(MinecraftServer.java:281)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+
+-- System Details --
+Details:
+	Minecraft Version: 1.21.1
+	Minecraft Version ID: 1.21.1
+	Operating System: Windows 10 (amd64) version 10.0
+	Java Version: 21.0.2, Oracle Corporation
+	Java VM Version: Java HotSpot(TM) 64-Bit Server VM (mixed mode, sharing), Oracle Corporation
+	Memory: 200064576 bytes (190 MiB) / 1333788672 bytes (1272 MiB) up to 12868124672 bytes (12272 MiB)
+	CPUs: 16
+	Processor Vendor: AuthenticAMD
+	Processor Name: AMD Ryzen 7 5800X 8-Core Processor             
+	Identifier: AuthenticAMD Family 25 Model 33 Stepping 0
+	Microarchitecture: Zen 3
+	Frequency (GHz): 3.79
+	Number of physical packages: 1
+	Number of physical CPUs: 8
+	Number of logical CPUs: 16
+	Graphics card #0 name: AMD  Radeon RX 7800 XT
+	Graphics card #0 vendor: Advanced Micro Devices, Inc.
+	Graphics card #0 VRAM (MiB): 16368.00
+	Graphics card #0 deviceId: VideoController1
+	Graphics card #0 versionInfo: 32.0.11021.1011
+	Memory slot #0 capacity (MiB): 8192.00
+	Memory slot #0 clockSpeed (GHz): 2.13
+	Memory slot #0 type: DDR4
+	Memory slot #1 capacity (MiB): 16384.00
+	Memory slot #1 clockSpeed (GHz): 2.13
+	Memory slot #1 type: DDR4
+	Memory slot #2 capacity (MiB): 8192.00
+	Memory slot #2 clockSpeed (GHz): 2.13
+	Memory slot #2 type: DDR4
+	Memory slot #3 capacity (MiB): 16384.00
+	Memory slot #3 clockSpeed (GHz): 2.13
+	Memory slot #3 type: DDR4
+	Virtual memory max (MiB): 80776.00
+	Virtual memory used (MiB): 72229.27
+	Swap memory total (MiB): 31697.71
+	Swap memory used (MiB): 3414.66
+	Space in storage for jna.tmpdir (MiB): <path not set>
+	Space in storage for org.lwjgl.system.SharedLibraryExtractPath (MiB): <path not set>
+	Space in storage for io.netty.native.workdir (MiB): <path not set>
+	Space in storage for java.io.tmpdir (MiB): available: 479217.38, total: 953252.31
+	Space in storage for workdir (MiB): available: 72770.14, total: 228935.00
+	JVM Flags: 0 total; 
+	Fabric Mods: 
+		accessories: Accessories 1.0.0-beta.35+1.21
+		architectury: Architectury 13.0.6
+		azurelib: AzureLib 2.3.21
+		cloth-basic-math: cloth-basic-math 0.6.1
+		cloth-config: Cloth Config v15 15.0.130
+		commonnetworking: Common Network 1.0.10-1.21
+		doom: MCDoom 8.0.0
+		error_notifier: Error Notifier 1.0.9
+		fabric-api: Fabric API 0.103.0+1.21.1
+		fabric-api-base: Fabric API Base 0.4.42+6573ed8cd1
+		fabric-api-lookup-api-v1: Fabric API Lookup API (v1) 1.6.68+b559734419
+		fabric-biome-api-v1: Fabric Biome API (v1) 13.0.29+5bd9f1bcd1
+		fabric-block-api-v1: Fabric Block API (v1) 1.0.22+0af3f5a719
+		fabric-block-view-api-v2: Fabric BlockView API (v2) 1.0.10+6573ed8cd1
+		fabric-blockrenderlayer-v1: Fabric BlockRenderLayer Registration (v1) 1.1.52+0af3f5a719
+		fabric-client-tags-api-v1: Fabric Client Tags 1.1.15+6573ed8cd1
+		fabric-command-api-v1: Fabric Command API (v1) 1.2.49+f71b366fd1
+		fabric-command-api-v2: Fabric Command API (v2) 2.2.28+6ced4dd919
+		fabric-commands-v0: Fabric Commands (v0) 0.2.66+df3654b319
+		fabric-content-registries-v0: Fabric Content Registries (v0) 8.0.16+b559734419
+		fabric-convention-tags-v1: Fabric Convention Tags 2.0.21+7f945d5b19
+		fabric-convention-tags-v2: Fabric Convention Tags (v2) 2.6.1+9b16164119
+		fabric-crash-report-info-v1: Fabric Crash Report Info (v1) 0.2.29+0af3f5a719
+		fabric-data-attachment-api-v1: Fabric Data Attachment API (v1) 1.1.28+1daea21519
+		fabric-data-generation-api-v1: Fabric Data Generation API (v1) 20.2.18+16c4ae2519
+		fabric-dimensions-v1: Fabric Dimensions API (v1) 4.0.0+6fc22b9919
+		fabric-entity-events-v1: Fabric Entity Events (v1) 1.7.0+2122d82819
+		fabric-events-interaction-v0: Fabric Events Interaction (v0) 0.7.12+ba9dae0619
+		fabric-game-rule-api-v1: Fabric Game Rule API (v1) 1.0.53+6ced4dd919
+		fabric-gametest-api-v1: Fabric Game Test API (v1) 2.0.4+6fc22b9919
+		fabric-item-api-v1: Fabric Item API (v1) 11.0.0+afdfc92119
+		fabric-item-group-api-v1: Fabric Item Group API (v1) 4.1.5+3fc0e55219
+		fabric-key-binding-api-v1: Fabric Key Binding API (v1) 1.0.47+0af3f5a719
+		fabric-keybindings-v0: Fabric Key Bindings (v0) 0.2.45+df3654b319
+		fabric-lifecycle-events-v1: Fabric Lifecycle Events (v1) 2.3.12+6c1df36019
+		fabric-loot-api-v2: Fabric Loot API (v2) 3.0.14+3f89f5a519
+		fabric-loot-api-v3: Fabric Loot API (v3) 1.0.2+3f89f5a519
+		fabric-message-api-v1: Fabric Message API (v1) 6.0.13+6573ed8cd1
+		fabric-model-loading-api-v1: Fabric Model Loading API (v1) 2.0.0+fe474d6bd1
+		fabric-networking-api-v1: Fabric Networking API (v1) 4.2.2+60c3209bd1
+		fabric-object-builder-api-v1: Fabric Object Builder API (v1) 15.2.0+40875a9319
+		fabric-particles-v1: Fabric Particles (v1) 4.0.2+6573ed8cd1
+		fabric-recipe-api-v1: Fabric Recipe API (v1) 5.0.12+6508971219
+		fabric-registry-sync-v0: Fabric Registry Sync (v0) 5.1.2+60c3209bd1
+		fabric-renderer-api-v1: Fabric Renderer API (v1) 3.4.0+c705a49cd1
+		fabric-renderer-indigo: Fabric Renderer - Indigo 1.7.0+c705a49cd1
+		fabric-renderer-registries-v1: Fabric Renderer Registries (v1) 3.2.68+df3654b319
+		fabric-rendering-data-attachment-v1: Fabric Rendering Data Attachment (v1) 0.3.48+73761d2ed1
+		fabric-rendering-fluids-v1: Fabric Rendering Fluids (v1) 3.1.6+1daea21519
+		fabric-rendering-v0: Fabric Rendering (v0) 1.1.71+df3654b319
+		fabric-rendering-v1: Fabric Rendering (v1) 5.0.5+df16efd019
+		fabric-resource-conditions-api-v1: Fabric Resource Conditions API (v1) 4.3.0+8dc279b119
+		fabric-resource-loader-v0: Fabric Resource Loader (v0) 1.3.0+5659912919
+		fabric-screen-api-v1: Fabric Screen API (v1) 2.0.25+8b68f1c719
+		fabric-screen-handler-api-v1: Fabric Screen Handler API (v1) 1.3.86+b559734419
+		fabric-sound-api-v1: Fabric Sound API (v1) 1.0.23+6573ed8cd1
+		fabric-transfer-api-v1: Fabric Transfer API (v1) 5.1.17+1db1cc1f19
+		fabric-transitive-access-wideners-v1: Fabric Transitive Access Wideners (v1) 6.1.0+176f9036d1
+		fabricloader: Fabric Loader 0.16.5
+		java: Java HotSpot(TM) 64-Bit Server VM 21
+		minecraft: Minecraft 1.21.1
+		mixinextras: MixinExtras 0.4.1
+		modmenu: Mod Menu 11.0.2
+		roughlyenoughitems: Roughly Enough Items 16.0.754
+	Server Running: true
+	Player Count: 1 / 8; [ServerPlayer['Player574'/34, l='ServerLevel[New World]', x=21.43, y=71.00, z=39.73]]
+	Active Data Packs: vanilla, fabric, accessories, doom (incompatible), fabric-convention-tags-v2, fabric-gametest-api-v1
+	Available Data Packs: accessories, bundle, doom (incompatible), fabric, fabric-convention-tags-v2, fabric-gametest-api-v1, trade_rebalance, vanilla
+	Enabled Feature Flags: minecraft:vanilla
+	World Generation: Experimental
+	World Seed: 3668199539124859687
+	Type: Integrated Server (map_client.txt)
+	Is Modded: Definitely; Client brand changed to 'fabric'; Server brand changed to 'fabric'
+	Launched Version: Fabric

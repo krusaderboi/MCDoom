@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:pistol"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:iron_ingot"
+      },
+      "count": 2
+    }
+  ]
+}

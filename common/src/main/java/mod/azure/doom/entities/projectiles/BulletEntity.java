@@ -1,14 +1,14 @@
 package mod.azure.doom.entities.projectiles;
 
-import mod.azure.azurelib.network.packet.EntityPacket;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierboss.IconofsinEntity;
 import mod.azure.doom.entities.tierfodder.PossessedSoldierEntity;
 import mod.azure.doom.helper.CommonUtils;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomParticles;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,7 +25,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
 import org.jetbrains.annotations.NotNull;
@@ -44,16 +43,16 @@ public class BulletEntity extends AbstractArrow {
     }
 
     public BulletEntity(Level world, LivingEntity owner, float damage) {
-        super(Services.ENTITIES_HELPER.getBulletEntity(), owner, world);
+        super(DoomMobs.BULLETS.get(), world);
         this.pickup = Pickup.DISALLOWED;
         this.setOwner(owner);
         this.projectiledamage = damage;
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(PARTICLE, 0);
+    protected void defineSynchedData(SynchedEntityData.@NotNull Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(PARTICLE, 0);
     }
 
     public Integer useParticle() {
@@ -65,17 +64,22 @@ public class BulletEntity extends AbstractArrow {
     }
 
     @Override
+    public void addAdditionalSaveData(CompoundTag compound) {
+        compound.putShort("life", (short)this.tickCount);
+    }
+
+    @Override
+    public void readAdditionalSaveData(CompoundTag compound) {
+        this.tickCount = compound.getShort("life");
+    }
+
+    @Override
     protected void doPostHurtEffects(@NotNull LivingEntity living) {
         super.doPostHurtEffects(living);
         if (!(living instanceof Player) && !(living instanceof IconofsinEntity)) {
             living.setDeltaMovement(0, 0, 0);
             living.invulnerableTime = 0;
         }
-    }
-
-    @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
     }
 
     @Override
@@ -110,7 +114,7 @@ public class BulletEntity extends AbstractArrow {
             var x = this.getX() + (this.random.nextDouble()) * this.getBbWidth() * 0.5D;
             var z = this.getZ() + (this.random.nextDouble()) * this.getBbWidth() * 0.5D;
             if (this.useParticle() == 1) {
-                this.level().addParticle(Services.PARTICLES_HELPER.getPISTOL(), true, x, this.getY(1), z, 0, 0, 0);
+                this.level().addParticle(DoomParticles.PISTOL.get(), true, x, this.getY(1), z, 0, 0, 0);
             }
             if (this.useParticle() == 2) {
                 this.level().addParticle(ParticleTypes.SMOKE, true, x, this.getY(1), z, 0, 0, 0);
@@ -122,10 +126,10 @@ public class BulletEntity extends AbstractArrow {
                 this.level().addParticle(ParticleTypes.FLASH, true, x, this.getY(1), z, 0, 0, 0);
             }
             if (this.useParticle() == 5) {
-                level().addParticle(Services.PARTICLES_HELPER.getUNMAYKR(), true, x, this.getY(1), z, 0, 0, 0);
+                level().addParticle(DoomParticles.UNMAYKR.get(), true, x, this.getY(1), z, 0, 0, 0);
             }
             if (this.useParticle() == 6) {
-                this.level().addParticle(Services.PARTICLES_HELPER.getPLASMA(), true, x, this.getY(1), z, 0, 0, 0);
+                this.level().addParticle(DoomParticles.PLASMA.get(), true, x, this.getY(1), z, 0, 0, 0);
             }
         }
         if (!this.level().isClientSide()) this.attachTimer++;
@@ -172,15 +176,15 @@ public class BulletEntity extends AbstractArrow {
 
     @Override
     protected @NotNull SoundEvent getDefaultHitGroundSoundEvent() {
-        return SoundEvents.ARMOR_EQUIP_IRON;
+        return SoundEvents.ARMOR_EQUIP_IRON.value();
     }
 
     @Override
     protected void onHitBlock(@NotNull BlockHitResult blockHitResult) {
         super.onHitBlock(blockHitResult);
         if (this.useParticle() != 7 && !this.level().isClientSide()) this.remove(RemovalReason.DISCARDED);
-        this.setSoundEvent(SoundEvents.ARMOR_EQUIP_IRON);
-        if (this.useParticle() == 6) setSoundEvent(Services.SOUNDS_HELPER.getPLASMA_HIT());
+        this.setSoundEvent(SoundEvents.ARMOR_EQUIP_IRON.value());
+        if (this.useParticle() == 6) setSoundEvent(DoomSounds.PLASMA_HIT.get());
     }
 
     @Override
@@ -192,12 +196,8 @@ public class BulletEntity extends AbstractArrow {
         if (this.useParticle() != 7) {
             if (entity.hurt(damageSources().thrown(entity, this.getOwner()),
                     projectiledamage) && (entity instanceof LivingEntity livingEntity)) {
-                if (!this.level().isClientSide && entity1 instanceof LivingEntity livingEntity1) {
-                    if (this.useParticle() != 7) {
-                        EnchantmentHelper.doPostHurtEffects(livingEntity, livingEntity1);
-                        EnchantmentHelper.doPostDamageEffects(livingEntity1, livingEntity);
-                    }
-                    if (this.isOnFire()) livingEntity.setSecondsOnFire(50);
+                if (!this.level().isClientSide && entity1 instanceof LivingEntity) {
+                    if (this.isOnFire()) livingEntity.setRemainingFireTicks(50);
                     if (this.useParticle() == 3 || this.useParticle() == 4)
                         this.explode(MCDoom.config.argent_bolt_damage);
                     if (this.useParticle() == 6 && livingEntity instanceof PossessedSoldierEntity possessedSoldier && possessedSoldier.getVariant() == 3)
@@ -221,7 +221,7 @@ public class BulletEntity extends AbstractArrow {
         this.level().getEntitiesOfClass(LivingEntity.class,
                 new AABB(this.blockPosition().above()).inflate(3D, 3D, 3D)).forEach(e -> {
             if (e != this.getOwner()) {
-                if (this.isOnFire()) e.setSecondsOnFire(50);
+                if (this.isOnFire()) e.setRemainingFireTicks(50);
                 e.hurt(damageSources().playerAttack((Player) this.getOwner()), damage);
             }
         });
@@ -247,6 +247,11 @@ public class BulletEntity extends AbstractArrow {
     @Override
     public boolean displayFireAnimation() {
         return false;
+    }
+
+    @Override
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        return Items.AIR.getDefaultInstance();
     }
 
 }

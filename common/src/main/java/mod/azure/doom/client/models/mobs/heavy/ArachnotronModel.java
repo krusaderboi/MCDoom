@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.mobs.heavy;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierheavy.ArachnotronEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -10,13 +10,13 @@ public class ArachnotronModel extends GeoModel<ArachnotronEntity> {
 
     @Override
     public ResourceLocation getModelResource(ArachnotronEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "geo/" + (object.getVariant() == 2 ? "arachnotron64" : "arachnotron") + ".geo.json");
     }
 
     @Override
     public ResourceLocation getTextureResource(ArachnotronEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "textures/entity/arachnotron-" + (object.getVariant() == 2 ? "64" : "texturemap") + ".png");
     }
 

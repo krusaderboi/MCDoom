@@ -1,8 +1,8 @@
 package mod.azure.doom.client.models.mobs.heavy;
 
-import mod.azure.azurelib.constant.DataTickets;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
+import mod.azure.azurelib.common.internal.common.constant.DataTickets;
 import mod.azure.azurelib.core.animation.AnimationState;
-import mod.azure.azurelib.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierheavy.ProwlerEntity;
 import net.minecraft.client.renderer.RenderType;
@@ -18,7 +18,7 @@ public class ProwlerModel extends GeoModel<ProwlerEntity> {
 
     @Override
     public ResourceLocation getTextureResource(ProwlerEntity object) {
-        return new ResourceLocation(MCDoom.MOD_ID,
+        return ResourceLocation.fromNamespaceAndPath(MCDoom.MOD_ID,
                 "textures/entity/" + (object.getVariant() == 2 ? "prowler_cursed" : "prowler") + ".png");
     }
 

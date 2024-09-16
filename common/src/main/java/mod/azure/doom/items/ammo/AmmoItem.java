@@ -6,7 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class AmmoItem extends Item {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Level level, List<Component> list, TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack itemStack, @NotNull TooltipContext context, @NotNull List<Component> list, @NotNull TooltipFlag tooltipFlag) {
         switch (getAmmoEnum()) {
             case ARGENT_BOLT ->
                     list.add(Component.translatable("doom.argentbolt.text").withStyle(ChatFormatting.ITALIC));
@@ -35,6 +35,6 @@ public class AmmoItem extends Item {
             case SHELL -> list.add(Component.translatable("doom.shell.text").withStyle(ChatFormatting.ITALIC));
             case UNMAYKR_BOLT -> list.add(Component.translatable("doom.unmaykr.text").withStyle(ChatFormatting.ITALIC));
         }
-        super.appendHoverText(itemStack, level, list, tooltipFlag);
+        super.appendHoverText(itemStack, context, list, tooltipFlag);
     }
 }

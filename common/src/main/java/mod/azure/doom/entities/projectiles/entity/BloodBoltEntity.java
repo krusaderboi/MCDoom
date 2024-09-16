@@ -1,18 +1,16 @@
 package mod.azure.doom.entities.projectiles.entity;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.network.packet.EntityPacket;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.entities.DemonEntity;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -32,7 +30,7 @@ public class BloodBoltEntity extends AbstractHurtingProjectile implements GeoEnt
     }
 
     public BloodBoltEntity(Level worldIn, LivingEntity shooter, double accelX, double accelY, double accelZ, float directHitDamage) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getBloodBoltEntity(), shooter, accelX, accelY, accelZ,
+        super(DoomMobs.BLOODBOLT.get(), accelX, accelY, accelZ,
                 worldIn);
         this.directHitDamage = directHitDamage;
     }
@@ -53,11 +51,6 @@ public class BloodBoltEntity extends AbstractHurtingProjectile implements GeoEnt
     }
 
     @Override
-    public @NotNull Packet<ClientGamePacketListener> getAddEntityPacket() {
-        return EntityPacket.createPacket(this);
-    }
-
-    @Override
     public boolean isNoGravity() {
         return !isInWater();
     }
@@ -74,7 +67,7 @@ public class BloodBoltEntity extends AbstractHurtingProjectile implements GeoEnt
             explode();
             remove(RemovalReason.DISCARDED);
         }
-        this.playSound(Services.SOUNDS_HELPER.getUNMAKYR_FIRE(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.UNMAKYR_FIRE.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     @Override
@@ -86,12 +79,11 @@ public class BloodBoltEntity extends AbstractHurtingProjectile implements GeoEnt
             if (entity instanceof LivingEntity livingEntity && (!(entity instanceof DemonEntity))) {
                 livingEntity.hurt(damageSources().mobProjectile(this, livingEntity), directHitDamage);
             }
-            if (entity2 instanceof LivingEntity livingEntity) {
-                if (!(entity instanceof DemonEntity)) doEnchantDamageEffects(livingEntity, entity);
+            if (entity2 instanceof LivingEntity) {
                 remove(RemovalReason.DISCARDED);
             }
         }
-        this.playSound(Services.SOUNDS_HELPER.getUNMAKYR_FIRE(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
+        this.playSound(DoomSounds.UNMAKYR_FIRE.get(), 1.0F, 1.2F / (random.nextFloat() * 0.2F + 0.9F));
     }
 
     protected void explode() {

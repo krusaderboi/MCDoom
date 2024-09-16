@@ -1,7 +1,9 @@
 package mod.azure.doom.blocks;
 
+import com.mojang.serialization.MapCodec;
 import mod.azure.doom.blocks.blockentities.TotemEntity;
 import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,6 +23,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 public class TotemBlock extends BaseEntityBlock implements EntityBlock {
@@ -37,11 +40,10 @@ public class TotemBlock extends BaseEntityBlock implements EntityBlock {
             10.600000000000001, 15.4, 16.200000000000003);
     private static final VoxelShape X_AXIS_AABB = Shapes.or(X_LENGTH1, X_LENGTH2);
     private static final VoxelShape Z_AXIS_AABB = Shapes.or(Y_LENGTH1, Y_LENGTH2);
+    public static final MapCodec<BaseEntityBlock> CODEC = simpleCodec(TotemBlock::new);
 
-    public TotemBlock() {
-        super(Properties.of().sound(
-                SoundType.BONE_BLOCK).noOcclusion().requiresCorrectToolForDrops().explosionResistance(30).strength(
-                4.0F).lightLevel(litBlockEmission(15)));
+    public TotemBlock(Properties properties) {
+        super(properties);
     }
 
     private static ToIntFunction<BlockState> litBlockEmission(int lightLevel) {
@@ -50,12 +52,17 @@ public class TotemBlock extends BaseEntityBlock implements EntityBlock {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
-        return createTickerHelper(type, Services.ENTITIES_HELPER.getTotemEntity(), TotemEntity::tick);
+        return createTickerHelper(type, DoomMobs.TOTEM_BLOCK.get(), TotemEntity::tick);
     }
 
     @Override
     public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
-        return Services.ENTITIES_HELPER.getTotemEntity().create(pos, state);
+        return DoomMobs.TOTEM_BLOCK.get().create(pos, state);
+    }
+
+    @Override
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
     }
 
     @Override

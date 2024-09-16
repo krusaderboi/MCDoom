@@ -1,13 +1,9 @@
 package mod.azure.doom.platform;
 
 import mod.azure.doom.platform.services.IPlatformHelper;
-import mod.azure.doom.registry.NeoDoomRecipes;
-import mod.azure.doom.registry.NeoDoomScreens;
-import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.loading.FMLLoader;
+import net.neoforged.fml.ModList;
+import net.neoforged.fml.loading.FMLEnvironment;
+import net.neoforged.fml.loading.FMLLoader;
 
 import java.nio.file.Path;
 
@@ -39,16 +35,6 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     @Override
     public boolean isServerEnvironment() {
         return FMLEnvironment.dist.isDedicatedServer();
-    }
-
-    @Override
-    public RecipeSerializer<?> getRecipeSeializer() {
-        return NeoDoomRecipes.GUN_TABLE_RECIPE_SERIALIZER.get();
-    }
-
-    @Override
-    public MenuType<?> getGunScreenHandler() {
-        return NeoDoomScreens.SCREEN_HANDLER_TYPE.get();
     }
 
 }

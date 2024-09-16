@@ -1,6 +1,5 @@
 package mod.azure.doom.client.render.mobs.fodder;
 
-import mod.azure.azurelib.renderer.GeoEntityRenderer;
 import mod.azure.doom.client.models.mobs.fodder.ImpStoneModel;
 import mod.azure.doom.client.render.mobs.DoomMobRender;
 import mod.azure.doom.entities.tierfodder.ImpStoneEntity;

@@ -35,8 +35,8 @@ public abstract class PlayerEntityMixin extends LivingEntity implements PlayerPr
     }
 
     @Inject(method = "defineSynchedData", at = @At("HEAD"))
-    public void defineData(CallbackInfo info) {
-        entityData.define(MEATHOOK_TRACKER, false);
+    public void defineData(SynchedEntityData.Builder builder, CallbackInfo info) {
+        builder.define(MEATHOOK_TRACKER, false);
     }
 
     @Override

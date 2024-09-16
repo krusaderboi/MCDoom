@@ -1,6 +1,7 @@
 package mod.azure.doom.helper;
 
-import mod.azure.azurelib.entities.TickingLightEntity;
+import mod.azure.azurelib.common.internal.common.blocks.TickingLightEntity;
+import mod.azure.azurelib.common.internal.common.registry.AzureBlocksRegistry;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.projectiles.BFGEntity;
 import mod.azure.doom.entities.projectiles.BulletEntity;
@@ -60,7 +61,7 @@ public class CommonUtils {
             lightBlockPos = CommonUtils.findFreeSpace(entity.level(), entity.blockPosition());
             if (lightBlockPos == null) return;
             entity.level().setBlockAndUpdate(lightBlockPos,
-                    mod.azure.azurelib.platform.Services.PLATFORM.getTickingLightBlock().defaultBlockState());
+                    AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get().defaultBlockState());
         } else if (CommonUtils.checkDistance(lightBlockPos, entity.blockPosition()) && entity.level().getBlockEntity(
                 lightBlockPos) instanceof TickingLightEntity tickingLightEntity) {
             tickingLightEntity.refresh(isInWaterBlock ? 20 : 0);
@@ -87,20 +88,18 @@ public class CommonUtils {
                     var offsetPos = blockPos.offset(x, y, z);
                     var state = world.getBlockState(offsetPos);
                     if (state.isAir() || state.getBlock().equals(
-                            mod.azure.azurelib.platform.Services.PLATFORM.getTickingLightBlock()))
+                            AzureBlocksRegistry.TICKING_LIGHT_BLOCK.get()))
                         return offsetPos;
                 }
         return null;
     }
 
     public static BulletEntity createBullet(Level worldIn, ItemStack stack, LivingEntity shooter, float damage) {
-        final var enchantment = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
-        return new BulletEntity(worldIn, shooter, damage + enchantment * 2.0F){};
+        return new BulletEntity(worldIn, shooter, damage){};
     }
 
     public static RocketEntity createRocket(Level worldIn, ItemStack stack, LivingEntity shooter) {
-        final var enchantlevel = EnchantmentHelper.getItemEnchantmentLevel(Enchantments.POWER_ARROWS, stack);
-        return new RocketEntity(worldIn, shooter, MCDoom.config.rocket_damage + enchantlevel * 2.0F){};
+        return new RocketEntity(worldIn, shooter, MCDoom.config.rocket_damage){};
     }
 
     public static BFGEntity createBFG(Level worldIn, LivingEntity shooter) {

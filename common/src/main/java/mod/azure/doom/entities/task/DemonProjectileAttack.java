@@ -2,6 +2,7 @@ package mod.azure.doom.entities.task;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import mod.azure.azurelib.sblforked.util.BrainUtils;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.DemonEntity;
 import mod.azure.doom.entities.tierambient.TurretEntity;
@@ -10,7 +11,8 @@ import mod.azure.doom.entities.tierfodder.*;
 import mod.azure.doom.entities.tierheavy.*;
 import mod.azure.doom.entities.tiersuperheavy.*;
 import mod.azure.doom.helper.CommonUtils;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -25,7 +27,6 @@ import net.minecraft.world.entity.ai.memory.MemoryStatus;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
-import net.tslat.smartbrainlib.util.BrainUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -220,7 +221,7 @@ public class DemonProjectileAttack<E extends DemonEntity> extends CustomDelayedR
     }
 
     private void motherDemonAttacks(MotherDemonEntity motherdemonEntity) {
-        final var tentacleEntity = Services.ENTITIES_HELPER.getTentacleEntity().create(motherdemonEntity.level());
+        final var tentacleEntity = DoomMobs.TENTACLE.get().create(motherdemonEntity.level());
         assert tentacleEntity != null;
         assert this.target != null;
         tentacleEntity.moveTo(this.target.getX(), this.target.getY(), this.target.getZ(), 0, 0);
@@ -274,13 +275,13 @@ public class DemonProjectileAttack<E extends DemonEntity> extends CustomDelayedR
     }
 
     private void painAttacks(PainEntity painEntity) {
-        painEntity.playSound(Services.SOUNDS_HELPER.getPAIN_HURT(), 1.0F, 1.0F);
-        var lostSoul = Services.ENTITIES_HELPER.getLostSoulEntity().create(painEntity.level());
+        painEntity.playSound(DoomSounds.PAIN_HURT.get(), 1.0F, 1.0F);
+        var lostSoul = DoomMobs.LOST_SOUL.get().create(painEntity.level());
         assert lostSoul != null;
         lostSoul.moveTo(painEntity.getX(), painEntity.getY(), painEntity.getZ(), 0, 0);
         painEntity.level().addFreshEntity(lostSoul);
         if (painEntity.getVariant() == 2) { // if doom 64, summon another
-            var lostSoul1 = Services.ENTITIES_HELPER.getLostSoulEntity().create(painEntity.level());
+            var lostSoul1 = DoomMobs.LOST_SOUL.get().create(painEntity.level());
             assert lostSoul1 != null;
             lostSoul1.moveTo(painEntity.getX(), painEntity.getY(), painEntity.getZ(), 0, 0);
             painEntity.level().addFreshEntity(lostSoul1);

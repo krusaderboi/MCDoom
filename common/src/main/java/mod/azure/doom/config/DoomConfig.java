@@ -1,53 +1,17 @@
 package mod.azure.doom.config;
 
-import mod.azure.azurelib.config.Config;
-import mod.azure.azurelib.config.Configurable;
+import mod.azure.azurelib.common.api.common.config.Config;
+import mod.azure.azurelib.common.internal.common.config.Configurable;
 import mod.azure.doom.MCDoom;
 
 @Config(id = MCDoom.MOD_ID)
 public class DoomConfig {
     @Configurable
     @Configurable.Synchronized
-    public boolean enable_all_villager_trades = true;
-    @Configurable
-    @Configurable.Synchronized
-    public boolean enable_weaponsmith_trades = true;
-    @Configurable
-    @Configurable.Synchronized
-    public boolean enable_toolsmith_trades = true;
-    @Configurable
-    @Configurable.Synchronized
-    public boolean enable_mason_trades = true;
-    @Configurable
-    @Configurable.Synchronized
     public boolean enable_soulcube_effects = true;
     @Configurable
     @Configurable.Synchronized
     public boolean enable_daisy_effects = true;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.Range(min = 1)
-    public int doom_armor_head_stat = 25;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.Range(min = 1)
-    public int doom_armor_chestplate_stat = 18;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.Range(min = 1)
-    public int doom_armor_leggings_stat = 20;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.Range(min = 1)
-    public int doom_armor_boots_stat = 15;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.DecimalRange(min = 1)
-    public float doom_armor_toughness = 24;
-    @Configurable
-    @Configurable.Synchronized
-    @Configurable.DecimalRange(min = 1)
-    public float doom_armor_knockbackResistance = 4;
     @Configurable
     @Configurable.Synchronized
     @Configurable.Range(min = 1)

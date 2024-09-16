@@ -1,6 +1,6 @@
 package mod.azure.doom.client.models.armor;
 
-import mod.azure.azurelib.model.GeoModel;
+import mod.azure.azurelib.common.api.client.model.GeoModel;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.items.armor.DoomArmor;
 import mod.azure.doom.items.enums.ArmorTypeEnum;

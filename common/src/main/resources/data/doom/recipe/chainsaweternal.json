@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:chainsaweternal"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:iron_ingot"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:redstone"
+      },
+      "count": 3
+    },
+    {
+      "ingredient": {
+        "item": "doom:gas_barrel"
+      },
+      "count": 1
+    }
+  ]
+}

@@ -1,17 +1,18 @@
 package mod.azure.doom.entities.projectiles;
 
-import mod.azure.azurelib.animatable.GeoEntity;
+import mod.azure.azurelib.common.api.common.animatable.GeoEntity;
+import mod.azure.azurelib.common.internal.common.util.AzureLibUtil;
 import mod.azure.azurelib.core.animatable.instance.AnimatableInstanceCache;
 import mod.azure.azurelib.core.animation.AnimatableManager.ControllerRegistrar;
 import mod.azure.azurelib.core.animation.AnimationController;
 import mod.azure.azurelib.core.object.PlayState;
-import mod.azure.azurelib.util.AzureLibUtil;
 import mod.azure.doom.MCDoom;
 import mod.azure.doom.entities.tierboss.DoomBoss;
 import mod.azure.doom.helper.PlayerProperties;
 import mod.azure.doom.items.enums.GunTypeEnum;
 import mod.azure.doom.items.weapons.DoomBaseItem;
-import mod.azure.doom.platform.Services;
+import mod.azure.doom.registry.DoomMobs;
+import mod.azure.doom.registry.DoomSounds;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -28,6 +29,7 @@ import net.minecraft.world.entity.boss.EnderDragonPart;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -53,25 +55,25 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
             EntityDataSerializers.INT);
 
     public MeatHookEntity(EntityType<? extends AbstractArrow> type, Player owner, Level world) {
-        super(type, owner, world);
+        super(type, world);
         setNoGravity(true);
         setBaseDamage(0);
     }
 
     public MeatHookEntity(Level world, LivingEntity owner) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getMeatHookEntity(), owner, world);
+        super(DoomMobs.MEATHOOOK_ENTITY.get(), world);
         setNoGravity(true);
         setBaseDamage(0);
     }
 
     public MeatHookEntity(Level world, double x, double y, double z) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getMeatHookEntity(), x, y, z, world);
+        super(DoomMobs.MEATHOOOK_ENTITY.get(),world);
         setNoGravity(true);
         setBaseDamage(0);
     }
 
     public MeatHookEntity(Level world) {
-        super(mod.azure.doom.platform.Services.ENTITIES_HELPER.getMeatHookEntity(), world);
+        super(DoomMobs.MEATHOOOK_ENTITY.get(), world);
         setNoGravity(true);
         setBaseDamage(0);
     }
@@ -92,11 +94,11 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(HOOKED_ENTITY_ID, 0);
-        this.entityData.define(FORCED_YAW, 0f);
-        this.entityData.define(VARIANT, 0);
+    protected void defineSynchedData(SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(HOOKED_ENTITY_ID, 0);
+        builder.define(FORCED_YAW, 0f);
+        builder.define(VARIANT, 0);
     }
 
     public Integer getVariant() {
@@ -220,7 +222,7 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
         if (currentTime - lastUpdateTime >= 300L) {
             lastUpdateTime = currentTime;
             this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
-                    Services.SOUNDS_HELPER.getMicrowaveBeam(), SoundSource.PLAYERS, 0.5F, 1.0F);
+                    DoomSounds.MICROWAVE_BEAM.get(), SoundSource.PLAYERS, 0.5F, 1.0F);
         }
         setYRot(entityData.get(FORCED_YAW));
         if (!(hookedEntity instanceof LivingEntity)) return;
@@ -251,8 +253,7 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
         if (hookedEntity != null && this.attachTimer >= (((LivingEntity) hookedEntity).getHealth()) && this.getVariant() == 1) {
             this.explode(hookedEntity);
             if (owner.getUseItem().getItem() instanceof DoomBaseItem gun && gun.getGunTypeEnum() == GunTypeEnum.PLAMSA)
-                owner.getMainHandItem().hurtAndBreak((int) (((LivingEntity) hookedEntity).getMaxHealth() * 0.5), owner,
-                        s -> owner.broadcastBreakEvent(owner.getUsedItemHand()));
+                owner.getMainHandItem().hurtAndBreak((int) (((LivingEntity) hookedEntity).getMaxHealth() * 0.5), owner, owner.getEquipmentSlotForItem(owner.getMainHandItem()));
             if (!level().isClientSide()) {
                 ((PlayerProperties) owner).setHasMeatHook(false);
             }
@@ -289,7 +290,7 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
     }
 
     @Override
-    public boolean canChangeDimensions() {
+    public boolean canChangeDimensions(@NotNull Level oldLevel, @NotNull Level newLevel) {
         return false;
     }
 
@@ -325,7 +326,7 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
         maxRange = tag.getDouble("maxRange");
         maxSpeed = tag.getDouble("maxSpeed");
         isPulling = tag.getBoolean("isPulling");
-        stack = ItemStack.of(tag.getCompound("hookshotItem"));
+        stack = ItemStack.parse(this.registryAccess(), tag.getCompound("hookshotItem")).orElse(ItemStack.EMPTY);
 
         if (level().getEntity(tag.getInt("owner")) instanceof final Player owner) setOwner(owner);
     }
@@ -337,7 +338,7 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
         tag.putDouble("maxRange", maxRange);
         tag.putDouble("maxSpeed", maxSpeed);
         tag.putBoolean("isPulling", isPulling);
-        tag.put("hookshotItem", stack.save(new CompoundTag()));
+        tag.put("hookshotItem", stack.save(this.registryAccess(), new CompoundTag()));
 
         if (getOwner() instanceof final Player owner) tag.putInt("owner", owner.getId());
     }
@@ -352,5 +353,10 @@ public class MeatHookEntity extends AbstractArrow implements GeoEntity {
         this.stack = stack;
         this.maxRange = maxRange;
         maxSpeed = maxVelocity;
+    }
+
+    @Override
+    protected @NotNull ItemStack getDefaultPickupItem() {
+        return Items.AIR.getDefaultInstance();
     }
 }

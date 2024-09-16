@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:supershotgun"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "doom:argent_energy"
+      },
+      "count": 20
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 8
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:iron_bars"
+      },
+      "count": 2
+    }
+  ]
+}

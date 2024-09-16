@@ -15,7 +15,7 @@
     }
   },
   "max_distance_from_center": 116,
-  "terrain_adaptation": "beard_thin",
+  "terrain_adaptation": "bury",
   "use_expansion_hack": false,
   "spawn_overrides": {
     "monster": {

@@ -1,0 +1,26 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:doomed_grenade"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:iron_ingot"
+      },
+      "count": 1
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:redstone"
+      },
+      "count": 2
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:gunpowder"
+      },
+      "count": 1
+    }
+  ]
+}

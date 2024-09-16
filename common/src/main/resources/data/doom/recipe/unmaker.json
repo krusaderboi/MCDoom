@@ -1,0 +1,32 @@
+{
+  "type": "doom:gun_table",
+  "result": {
+    "id": "doom:unmaker"
+  },
+  "ingredients": [
+    {
+      "ingredient": {
+        "item": "minecraft:nether_star"
+      },
+      "count": 10
+    },
+    {
+      "ingredient": {
+        "item": "doom:argent_plate"
+      },
+      "count": 4
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:phantom_membrane"
+      },
+      "count": 6
+    },
+    {
+      "ingredient": {
+        "item": "minecraft:netherite_ingot"
+      },
+      "count": 1
+    }
+  ]
+}
